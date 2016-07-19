@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$USER_HOME$/src/sauer.lists/app/app.iml" filepath="$USER_HOME$/src/sauer.lists/app/app.iml" />
+      <module fileurl="file://$USER_HOME$/src/sauer.lists/sauer.lists.iml" filepath="$USER_HOME$/src/sauer.lists/sauer.lists.iml" />
+    </modules>
+  </component>
+</project>
