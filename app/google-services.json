@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "460983314604",
+    "firebase_url": "https://sauer-lists.firebaseio.com",
+    "project_id": "sauer-lists",
+    "storage_bucket": "sauer-lists.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:460983314604:android:2c8e5b9f222dc02d",
+        "android_client_info": {
+          "package_name": "sauer.lists"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "460983314604-llnhd3cjss4lrb4c1kskijlrlm7vthhl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBLf7zjVJu5W0qjWyJVPaWx6EgmG0Ak1ss"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
