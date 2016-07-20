@@ -4,11 +4,11 @@ import com.google.firebase.database.DatabaseReference;
 
 import java.util.ArrayList;
 
-public class Lijst {
+public class SauerList {
     public DatabaseReference databaseReference;
     public Object value;
 
-    public Lijst(DatabaseReference ref, Object s) {
+    public SauerList(DatabaseReference ref, Object s) {
         databaseReference = ref;
         value = s;
     }

@@ -15,7 +15,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-public class SauerListAdapter extends ArrayAdapter<Lijst> implements ChildEventListener {
+public class SauerListAdapter extends ArrayAdapter<SauerList> implements ChildEventListener {
 
     static final String TAG = SauerListAdapter.class.getName();
 
@@ -37,7 +37,7 @@ public class SauerListAdapter extends ArrayAdapter<Lijst> implements ChildEventL
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService
                 (Context.LAYOUT_INFLATER_SERVICE);
-        View view = inflater.inflate(R.layout.sauer_lists_entry, null);
+        View view = inflater.inflate(R.layout.sauer_list_entry, null);
         TextView listNameTextView = (TextView) view.findViewById(R.id.list_name);
         TextView itemCountTextView = (TextView) view.findViewById(R.id.item_count);
         String listName = getItem(position).toString();
@@ -50,7 +50,7 @@ public class SauerListAdapter extends ArrayAdapter<Lijst> implements ChildEventL
     @Override
     public void onChildAdded(DataSnapshot dataSnapshot, String previousChildName) {
         Log.d(TAG, "onChildAdded() " + dataSnapshot.getRef().toString() + " " + dataSnapshot.getValue());
-        add(new Lijst(dataSnapshot.getRef(), dataSnapshot.getValue()));
+        add(new SauerList(dataSnapshot.getRef(), dataSnapshot.getValue()));
     }
 
     @Override
@@ -66,14 +66,14 @@ public class SauerListAdapter extends ArrayAdapter<Lijst> implements ChildEventL
         remove(GetLijst(dataSnapshot.getRef()));
     }
 
-    private Lijst GetLijst(DatabaseReference ref) {
+    private SauerList GetLijst(DatabaseReference ref) {
         for (int i = 0; i < getCount(); i++) {
-            Lijst l = getItem(i);
+            SauerList l = getItem(i);
             if (l.databaseReference.equals(ref)) {
                 return l;
             }
         }
-        throw new RuntimeException("Lijst not found: " + ref.toString());
+        throw new RuntimeException("SauerList not found: " + ref.toString());
     }
 
     @Override
