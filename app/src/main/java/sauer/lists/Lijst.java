@@ -2,17 +2,28 @@ package sauer.lists;
 
 import com.google.firebase.database.DatabaseReference;
 
+import java.util.ArrayList;
+
 public class Lijst {
     public DatabaseReference databaseReference;
-    public String value;
+    public Object value;
 
-    public Lijst(DatabaseReference ref, String s) {
+    public Lijst(DatabaseReference ref, Object s) {
         databaseReference = ref;
         value = s;
     }
 
     @Override
     public String toString() {
-        return databaseReference.getKey().toString() + (value == null ? " (empty)" : " (NOT empty)");
+        return databaseReference.getKey().toString();
+    }
+
+    public int getCount() {
+        if (value != null && value.getClass().equals(ArrayList.class)) {
+            ArrayList list = (ArrayList) value;
+            return list.size();
+        } else {
+            return 0;
+        }
     }
 }

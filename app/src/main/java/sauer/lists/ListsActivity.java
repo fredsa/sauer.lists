@@ -13,7 +13,7 @@ public class ListsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_lists);
 
         ListView listView = (ListView) findViewById(R.id.list_view);
-        SauerListAdapter adapter = new SauerListAdapter(getApplicationContext(), R.layout.lists_list_item_text_view);
+        SauerListAdapter adapter = new SauerListAdapter(getApplicationContext(), R.layout.sauer_lists_entry);
         listView.setAdapter(adapter);
     }
 }

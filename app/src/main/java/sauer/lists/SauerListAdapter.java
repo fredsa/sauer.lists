@@ -1,15 +1,12 @@
 package sauer.lists;
 
 import android.content.Context;
-import android.os.Debug;
-import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import com.google.firebase.database.ChildEventListener;
@@ -18,12 +15,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class SauerListAdapter extends ArrayAdapter<Lijst> implements ChildEventListener {
 
-    static final String TAG  = SauerListAdapter.class.getName();
+    static final String TAG = SauerListAdapter.class.getName();
 
     FirebaseDatabase database;
 
@@ -35,32 +29,40 @@ public class SauerListAdapter extends ArrayAdapter<Lijst> implements ChildEventL
         lists.addChildEventListener(this);
 
         lists.child("Groceries").setValue("");
+        lists.child("Answer").setValue("forty-two");
     }
 
     @NonNull
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        LayoutInflater inflater = (LayoutInflater)getContext().getSystemService
+        LayoutInflater inflater = (LayoutInflater) getContext().getSystemService
                 (Context.LAYOUT_INFLATER_SERVICE);
-        View view = inflater.inflate(R.layout.lists_list_item_text_view, null);
+        View view = inflater.inflate(R.layout.sauer_lists_entry, null);
         TextView listNameTextView = (TextView) view.findViewById(R.id.list_name);
+        TextView itemCountTextView = (TextView) view.findViewById(R.id.item_count);
         String listName = getItem(position).toString();
+        String countText = "(" + getItem(position).getCount() + ")";
         listNameTextView.setText(listName);
+        itemCountTextView.setText(countText);
         return view;
     }
 
     @Override
-    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-        add(new Lijst(dataSnapshot.getRef(), s));
+    public void onChildAdded(DataSnapshot dataSnapshot, String previousChildName) {
+        Log.d(TAG, "onChildAdded() " + dataSnapshot.getRef().toString() + " " + dataSnapshot.getValue());
+        add(new Lijst(dataSnapshot.getRef(), dataSnapshot.getValue()));
     }
 
     @Override
-    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-        // ignore
+    public void onChildChanged(DataSnapshot dataSnapshot, String previousChildName) {
+        Log.d(TAG, "onChildChanged() " + dataSnapshot.getRef().toString() + " " + dataSnapshot.getValue());
+        GetLijst(dataSnapshot.getRef()).value = dataSnapshot.getValue();
+        notifyDataSetChanged();
     }
 
     @Override
     public void onChildRemoved(DataSnapshot dataSnapshot) {
+        Log.d(TAG, "onChildRemoved() " + dataSnapshot.getRef().toString());
         remove(GetLijst(dataSnapshot.getRef()));
     }
 
@@ -75,13 +77,13 @@ public class SauerListAdapter extends ArrayAdapter<Lijst> implements ChildEventL
     }
 
     @Override
-    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+    public void onChildMoved(DataSnapshot dataSnapshot, String previousChildName) {
         // ignore
-
+        Log.d(TAG, "onChildMoved() " + dataSnapshot.getRef().toString() + " " + dataSnapshot.getValue());
     }
 
     @Override
     public void onCancelled(DatabaseError databaseError) {
-        Log.d(TAG, databaseError.toString(),databaseError.toException());
+        Log.d(TAG, databaseError.toString(), databaseError.toException());
     }
 }

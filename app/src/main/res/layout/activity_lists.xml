@@ -10,15 +10,15 @@
     tools:context=".ListsActivity">
 
     <ListView
+        android:id="@+id/list_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginRight="47dp"
-        android:layout_marginEnd="47dp"
+        android:layout_alignParentRight="true"
         android:layout_marginBottom="198dp"
-        android:id="@+id/list_view"
+        android:layout_marginEnd="47dp"
+        android:layout_marginRight="47dp"
         android:divider="@android:drawable/divider_horizontal_textfield"
         android:dividerHeight="0dp" />
 </RelativeLayout>
