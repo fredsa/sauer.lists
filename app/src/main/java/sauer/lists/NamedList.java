@@ -2,13 +2,14 @@ package sauer.lists;
 
 import com.google.firebase.database.DatabaseReference;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class SauerList {
+public class NamedList implements Serializable{
     public DatabaseReference databaseReference;
     public Object value;
 
-    public SauerList(DatabaseReference ref, Object s) {
+    public NamedList(DatabaseReference ref, Object s) {
         databaseReference = ref;
         value = s;
     }
