@@ -3,12 +3,14 @@ package sauer.lists;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.firebase.database.DatabaseReference;
 
-public class ListOfItemsActivity extends AppCompatActivity {
+public class ListOfItemsActivity extends AppCompatActivity implements AdapterView.OnItemLongClickListener {
 
     ListView listView;
 
@@ -31,6 +33,13 @@ public class ListOfItemsActivity extends AppCompatActivity {
         listView = (ListView) findViewById(R.id.list_view);
         ListOfItemsAdapter adapter = new ListOfItemsAdapter(getApplicationContext(), R.layout.named_list, list);
         listView.setAdapter(adapter);
+        listView.setOnItemLongClickListener(this);
+    }
 
+    @Override
+    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+        NamedItem namedItem = (NamedItem) listView.getItemAtPosition(position);
+        namedItem.databaseReference.removeValue();
+        return true;
     }
 }
