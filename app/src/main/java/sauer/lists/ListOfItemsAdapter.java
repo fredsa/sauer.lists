@@ -31,8 +31,11 @@ public class ListOfItemsAdapter extends ArrayAdapter<NamedItem> implements Child
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService
                 (Context.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(R.layout.named_item, null);
+        TextView itemNumberTextView = (TextView) view.findViewById(R.id.item_number);
         TextView listNameTextView = (TextView) view.findViewById(R.id.item_name);
+        String itemNumber = getItem(position).getItemNumber() + ".";
         String itemName = getItem(position).toString();
+        itemNumberTextView.setText(itemNumber);
         listNameTextView.setText(itemName);
         return view;
     }

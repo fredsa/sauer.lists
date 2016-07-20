@@ -6,6 +6,17 @@
 
 
     <TextView
+        android:id="@+id/item_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingBottom="14sp"
+        android:paddingTop="14sp"
+        android:paddingRight="6sp"
+        android:text="42."
+        android:textAppearance="@android:style/TextAppearance.Material.Large"
+        android:textColor="#444" />
+
+    <TextView
         android:id="@+id/item_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
