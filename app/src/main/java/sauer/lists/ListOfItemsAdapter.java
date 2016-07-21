@@ -39,7 +39,7 @@ public class ListOfItemsAdapter extends ArrayAdapter<NamedItem> implements Child
         String itemNumber = position + ".";
         itemNumberTextView.setText(itemNumber);
 
-        final EditText itemNameEditText = (EditText) view.findViewById(R.id.item_name);
+        final TextView itemNameEditText = (TextView) view.findViewById(R.id.item_name);
         String itemName = getItem(position).toString();
         itemNameEditText.setText(itemName);
         itemNameEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -50,7 +50,7 @@ public class ListOfItemsAdapter extends ArrayAdapter<NamedItem> implements Child
                 }
                 if (!hasFocus) {
                     NamedItem namedItem = getItem(position);
-                    namedItem.databaseReference.setValue(itemNameEditText.getText().toString());
+                    namedItem.databaseReference.setValue(itemNameEditText.getText());
                 }
             }
         });
