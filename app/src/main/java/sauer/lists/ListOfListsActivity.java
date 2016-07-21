@@ -35,7 +35,7 @@ public class ListOfListsActivity extends AppCompatActivity implements AdapterVie
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                lists.child("" + Math.round(1000 * Math.random())).setValue("");
+                lists.child("List " + Math.round(1000 * Math.random())).setValue("");
             }
         });
     }

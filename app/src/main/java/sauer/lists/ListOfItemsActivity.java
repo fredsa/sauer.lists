@@ -1,6 +1,7 @@
 package sauer.lists;
 
 import android.content.Intent;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -34,6 +35,14 @@ public class ListOfItemsActivity extends AppCompatActivity implements AdapterVie
         ListOfItemsAdapter adapter = new ListOfItemsAdapter(getApplicationContext(), R.layout.named_list, list);
         listView.setAdapter(adapter);
         listView.setOnItemLongClickListener(this);
+
+        FloatingActionButton addButton = (FloatingActionButton) findViewById(R.id.add_button);
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                list.push().setValue("Item " + Math.round(1000 * Math.random()));
+            }
+        });
     }
 
     @Override

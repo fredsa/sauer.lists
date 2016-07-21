@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.google.firebase.database.ChildEventListener;
@@ -23,9 +24,6 @@ public class ListOfListsAdapter extends ArrayAdapter<NamedList> implements Child
         super(context, resource, R.id.list_name);
 
         databaseReference.addChildEventListener(this);
-
-        databaseReference.child("Groceries").setValue("");
-        databaseReference.child("Answer").setValue("forty-two");
     }
 
     @NonNull
@@ -34,12 +32,15 @@ public class ListOfListsAdapter extends ArrayAdapter<NamedList> implements Child
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService
                 (Context.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(R.layout.named_list, null);
+
         TextView listNameTextView = (TextView) view.findViewById(R.id.list_name);
-        TextView itemCountTextView = (TextView) view.findViewById(R.id.item_count);
         String listName = getItem(position).toString();
-        String countText = "(" + getItem(position).getCount() + ")";
         listNameTextView.setText(listName);
+
+        TextView itemCountTextView = (TextView) view.findViewById(R.id.item_count);
+        String countText = "(" + getItem(position).getCount() + ")";
         itemCountTextView.setText(countText);
+
         return view;
     }
 

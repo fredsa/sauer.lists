@@ -16,13 +16,14 @@
         android:textAppearance="@android:style/TextAppearance.Material.Large"
         android:textColor="#444" />
 
-    <TextView
+    <EditText
         android:id="@+id/item_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingBottom="14sp"
         android:paddingTop="14sp"
         android:text="Apples"
+        android:maxLines="1"
         android:textAppearance="@android:style/TextAppearance.Material.Large"
         android:textColor="@color/colorPrimaryDark" />
 

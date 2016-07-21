@@ -18,8 +18,4 @@ public class NamedItem {
         return value.toString();
     }
 
-    public String getItemNumber() {
-        return databaseReference.getKey().toString();
-    }
-
 }

@@ -1,9 +1,12 @@
 package sauer.lists;
 
+import android.util.Log;
+
 import com.google.firebase.database.DatabaseReference;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class NamedList implements Serializable{
     public DatabaseReference databaseReference;
@@ -20,9 +23,10 @@ public class NamedList implements Serializable{
     }
 
     public int getCount() {
-        if (value != null && value.getClass().equals(ArrayList.class)) {
-            ArrayList list = (ArrayList) value;
-            return list.size();
+        Log.d("TAG", value.getClass().getCanonicalName());
+        if (value != null && value.getClass().equals(HashMap.class)) {
+            HashMap map = (HashMap) value;
+            return map.size();
         } else {
             return 0;
         }

@@ -3,11 +3,14 @@ package sauer.lists;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.google.firebase.database.ChildEventListener;
@@ -27,16 +30,31 @@ public class ListOfItemsAdapter extends ArrayAdapter<NamedItem> implements Child
 
     @NonNull
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService
                 (Context.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(R.layout.named_item, null);
+
         TextView itemNumberTextView = (TextView) view.findViewById(R.id.item_number);
-        TextView listNameTextView = (TextView) view.findViewById(R.id.item_name);
-        String itemNumber = getItem(position).getItemNumber() + ".";
-        String itemName = getItem(position).toString();
+        String itemNumber = position + ".";
         itemNumberTextView.setText(itemNumber);
-        listNameTextView.setText(itemName);
+
+        final EditText itemNameEditText = (EditText) view.findViewById(R.id.item_name);
+        String itemName = getItem(position).toString();
+        itemNameEditText.setText(itemName);
+        itemNameEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean hasFocus) {
+                if (position > getCount() - 1) {
+                    return;
+                }
+                if (!hasFocus) {
+                    NamedItem namedItem = getItem(position);
+                    namedItem.databaseReference.setValue(itemNameEditText.getText().toString());
+                }
+            }
+        });
+
         return view;
     }
 
