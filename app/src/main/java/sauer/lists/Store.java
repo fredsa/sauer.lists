@@ -9,10 +9,10 @@ public class Store {
     static DatabaseReference lists;
 
     static void init() {
-//        if (database == null) {
+        if (database == null) {
             database = FirebaseDatabase.getInstance();
             lists = database.getReference("lists");
-//        }
+        }
     }
 
     public static DatabaseReference lists() {
