@@ -5,20 +5,20 @@ import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 
-public class ListOfItemsActivity extends AppCompatActivity implements AdapterView.OnItemLongClickListener, AdapterView.OnItemClickListener {
+public class ItemsActivity extends AppCompatActivity implements AdapterView.OnItemLongClickListener, AdapterView.OnItemClickListener {
 
     ListView listView;
-    ListOfItemsAdapter adapter;
+    TextView listNameTextView;
+
+    ItemsAdapter adapter;
 
     DatabaseReference list;
 
@@ -26,18 +26,24 @@ public class ListOfItemsActivity extends AppCompatActivity implements AdapterVie
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_list_of_items);
+        setContentView(R.layout.activity_items);
 
         Intent intent = getIntent();
-        String listName = intent.getStringExtra("key");
+        String listKey = intent.getStringExtra("list_key");
 
-        TextView listNameTextView = (TextView) findViewById(R.id.list_name);
-        listNameTextView.setText(listName);
+        listNameTextView = (TextView) findViewById(R.id.list_name);
 
-        list = Store.lists().child(listName);
+        list = Store.getList(listKey);
+        list.child("name").addListenerForSingleValueEvent(new LoggingValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                listNameTextView.setText(dataSnapshot.getValue().toString());
+            }
+        });
+
+        adapter = new ItemsAdapter(getApplicationContext(), R.layout.list, list);
 
         listView = (ListView) findViewById(R.id.list_view);
-        adapter = new ListOfItemsAdapter(getApplicationContext(), R.layout.named_list, list);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(this);
         listView.setOnItemLongClickListener(this);
@@ -46,23 +52,23 @@ public class ListOfItemsActivity extends AppCompatActivity implements AdapterVie
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                list.push().setValue("Item " + Math.round(1000 * Math.random()));
+                list.child("items").push().child("name").setValue("Item " + Math.round(100 * Math.random()));
             }
         });
     }
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-        NamedItem namedItem = adapter.getItem(position);
+        DatabaseReference item = adapter.getItem(position);
 
-        DialogFragment dialog = new EditNameDialogFragment(namedItem);
+        DialogFragment dialog = new EditNameDialogFragment(item);
         dialog.show(getFragmentManager(), null);
     }
 
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-        NamedItem namedItem = (NamedItem) listView.getItemAtPosition(position);
-        namedItem.databaseReference.removeValue();
+        DatabaseReference item = adapter.getItem(position);
+        item.removeValue();
         return true;
     }
 

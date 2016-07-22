@@ -23,7 +23,7 @@
             android:layout_height="wrap_content"
             android:paddingBottom="14sp"
             android:paddingTop="14sp"
-            android:text="An apple a day keeps the doctor away, so let's buy apples"
+            android:text="Pear"
             android:textAppearance="@android:style/TextAppearance.Material.Large"
             android:textColor="@color/colorPrimaryDark" />
 

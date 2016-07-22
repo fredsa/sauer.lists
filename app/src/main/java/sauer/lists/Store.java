@@ -19,4 +19,10 @@ public class Store {
         init();
         return lists;
     }
+
+    public static DatabaseReference getList(String listKey)
+    {
+        init();
+        return lists.child(listKey);
+    }
 }

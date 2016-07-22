@@ -6,7 +6,6 @@ import android.app.DialogFragment;
 import android.app.FragmentManager;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,13 +14,16 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseReference;
+
 public class EditNameDialogFragment extends DialogFragment {
 
-    NamedItem namedItem;
+    DatabaseReference databaseReference;
     EditText nameEditText;
 
-    EditNameDialogFragment(NamedItem databaseReference) {
-        this.namedItem = databaseReference;
+    EditNameDialogFragment(DatabaseReference databaseReference) {
+        this.databaseReference = databaseReference;
     }
 
     @Override
@@ -32,7 +34,12 @@ public class EditNameDialogFragment extends DialogFragment {
         View view = inflater.inflate(R.layout.edit_name_dialog, null);
 
         nameEditText = (EditText) view.findViewById(R.id.name);
-        nameEditText.append(namedItem.value.toString());
+        databaseReference.child("name").addListenerForSingleValueEvent(new LoggingValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                nameEditText.append(dataSnapshot.getValue().toString());
+            }
+        });
 
         nameEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -74,6 +81,6 @@ public class EditNameDialogFragment extends DialogFragment {
     }
 
     void save() {
-        namedItem.databaseReference.setValue(nameEditText.getText().toString());
+        databaseReference.child("name").setValue(nameEditText.getText().toString());
     }
 }

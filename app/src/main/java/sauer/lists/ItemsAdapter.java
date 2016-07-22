@@ -3,14 +3,10 @@ package sauer.lists;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import com.google.firebase.database.ChildEventListener;
@@ -18,14 +14,14 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 
-public class ListOfItemsAdapter extends ArrayAdapter<NamedItem> implements ChildEventListener {
+public class ItemsAdapter extends ArrayAdapter<DatabaseReference> implements ChildEventListener {
 
-    static final String TAG = ListOfItemsAdapter.class.getName();
+    static final String TAG = ItemsAdapter.class.getName();
 
-    public ListOfItemsAdapter(Context context, int resource, DatabaseReference databaseReference) {
+    public ItemsAdapter(Context context, int resource, DatabaseReference list) {
         super(context, resource, R.id.list_name);
 
-        databaseReference.addChildEventListener(this);
+        list.child("items").addChildEventListener(this);
     }
 
     @NonNull
@@ -33,24 +29,28 @@ public class ListOfItemsAdapter extends ArrayAdapter<NamedItem> implements Child
     public View getView(final int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService
                 (Context.LAYOUT_INFLATER_SERVICE);
-        View view = inflater.inflate(R.layout.named_item, null);
+        View view = inflater.inflate(R.layout.item, null);
 
         TextView itemNumberTextView = (TextView) view.findViewById(R.id.item_number);
-        String itemNumber = position + ".";
+        String itemNumber = (position + 1) + ".";
         itemNumberTextView.setText(itemNumber);
 
-        final TextView itemNameEditText = (TextView) view.findViewById(R.id.item_name);
-        String itemName = getItem(position).toString();
-        itemNameEditText.setText(itemName);
-        itemNameEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        final TextView itemNameTextView = (TextView) view.findViewById(R.id.item_name);
+        final DatabaseReference item = getItem(position);
+        item.child("name").addListenerForSingleValueEvent(new LoggingValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                itemNameTextView.setText(dataSnapshot.getValue().toString());
+            }
+        });
+        itemNameTextView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean hasFocus) {
                 if (position > getCount() - 1) {
                     return;
                 }
                 if (!hasFocus) {
-                    NamedItem namedItem = getItem(position);
-                    namedItem.databaseReference.setValue(itemNameEditText.getText());
+                    item.child("name").setValue(itemNameTextView.getText().toString());
                 }
             }
         });
@@ -58,38 +58,26 @@ public class ListOfItemsAdapter extends ArrayAdapter<NamedItem> implements Child
         return view;
     }
 
-    private NamedItem getNamedItem(DatabaseReference ref) {
-        for (int i = 0; i < getCount(); i++) {
-            NamedItem namedItem = getItem(i);
-            if (namedItem.databaseReference.equals(ref)) {
-                return namedItem;
-            }
-        }
-        throw new RuntimeException("NamedItem not found: " + ref.toString());
-    }
-
     @Override
     public void onChildAdded(DataSnapshot dataSnapshot, String previousChildName) {
         Log.d(TAG, "onChildAdded() " + dataSnapshot.getRef().toString() + " " + dataSnapshot.getValue());
-        add(new NamedItem(dataSnapshot.getRef(), dataSnapshot.getValue()));
+        add(dataSnapshot.getRef());
     }
 
     @Override
     public void onChildChanged(DataSnapshot dataSnapshot, String previousChildName) {
         Log.d(TAG, "onChildChanged() " + dataSnapshot.getRef().toString() + " " + dataSnapshot.getValue());
-        getNamedItem(dataSnapshot.getRef()).value = dataSnapshot.getValue();
         notifyDataSetChanged();
     }
 
     @Override
     public void onChildRemoved(DataSnapshot dataSnapshot) {
         Log.d(TAG, "onChildRemoved() " + dataSnapshot.getRef().toString());
-        remove(getNamedItem(dataSnapshot.getRef()));
+        remove(dataSnapshot.getRef());
     }
 
     @Override
     public void onChildMoved(DataSnapshot dataSnapshot, String previousChildName) {
-        // ignore
         Log.d(TAG, "onChildMoved() " + dataSnapshot.getRef().toString() + " " + dataSnapshot.getValue());
     }
 
