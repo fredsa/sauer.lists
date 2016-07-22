@@ -81,6 +81,9 @@ public class EditNameDialogFragment extends DialogFragment {
     }
 
     void save() {
-        databaseReference.child("name").setValue(nameEditText.getText().toString());
+        String value = nameEditText.getText().toString().trim();
+        if (value.length() != 0) {
+            databaseReference.child("name").setValue(value);
+        }
     }
 }

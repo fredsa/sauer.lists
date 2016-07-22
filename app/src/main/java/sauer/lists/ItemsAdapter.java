@@ -46,6 +46,7 @@ public class ItemsAdapter extends ArrayAdapter<DatabaseReference> implements Chi
         itemNameTextView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean hasFocus) {
+                // check if view is being torn down
                 if (position > getCount() - 1) {
                     return;
                 }
