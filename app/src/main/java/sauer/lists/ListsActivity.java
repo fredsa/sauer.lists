@@ -23,7 +23,15 @@ public class ListsActivity extends AppCompatActivity implements AdapterView.OnIt
         setContentView(R.layout.activity_lists);
 
         final DatabaseReference lists = Store.lists();
-
+        lists.addListenerForSingleValueEvent(new LoggingValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (!dataSnapshot.exists()) {
+                    addGroceriesList(lists);
+                    addTodoList(lists);
+                }
+            }
+        });
         adapter = new ListsAdapter(getApplicationContext(), R.layout.list, lists);
 
         listView = (ListView) findViewById(R.id.list_view);
@@ -41,7 +49,26 @@ public class ListsActivity extends AppCompatActivity implements AdapterView.OnIt
         });
     }
 
-    @Override
+    private void addGroceriesList(DatabaseReference lists) {
+        DatabaseReference list = lists.push();
+        list.child("name").setValue("Groceries");
+        DatabaseReference items = list.child("items");
+        items.push().child("name").setValue("fresh mozarella");
+        items.push().child("name").setValue("basil");
+        items.push().child("name").setValue("olive oil");
+        items.push().child("name").setValue("balsamic vinegar");
+    }
+
+    private void addTodoList(DatabaseReference lists) {
+        DatabaseReference list = lists.push();
+        list.child("name").setValue("To do list");
+        DatabaseReference items = list.child("items");
+        items.push().child("name").setValue("take out trash");
+        items.push().child("name").setValue("buy HTC Vive");
+        items.push().child("name").setValue("change oil");
+    }
+
+        @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         DatabaseReference list = adapter.getItem(position);
         Intent intent = new Intent(this, ItemsActivity.class);
