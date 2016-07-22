@@ -1,6 +1,5 @@
 package sauer.lists;
 
-import android.app.DialogFragment;
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -35,8 +34,8 @@ public class ListsActivity extends AppCompatActivity implements AdapterView.OnIt
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DialogFragment dialog = new EditNameDialogFragment(lists.push());
-                dialog.show(getFragmentManager(), null);
+                EditNameDialogFragment dialog = new EditNameDialogFragment();
+                dialog.show(getFragmentManager(), lists.push(), getString(R.string.list_name));
             }
         });
     }
@@ -45,7 +44,7 @@ public class ListsActivity extends AppCompatActivity implements AdapterView.OnIt
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         DatabaseReference list = adapter.getItem(position);
         Intent intent = new Intent(this, ItemsActivity.class);
-        intent.putExtra("list_key", list.getKey().toString());
+        intent.putExtra(ItemsActivity.INTENT_EXTRA_LIST_KEY, list.getKey().toString());
         startActivity(intent);
     }
 

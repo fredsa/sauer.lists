@@ -1,22 +1,20 @@
 package sauer.lists;
 
-import android.app.DialogFragment;
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 
 public class ItemsActivity extends AppCompatActivity implements AdapterView.OnItemLongClickListener, AdapterView.OnItemClickListener {
+
+    public static final String INTENT_EXTRA_LIST_KEY = "list_key";
 
     ListView listView;
     TextView listNameTextView;
@@ -32,7 +30,7 @@ public class ItemsActivity extends AppCompatActivity implements AdapterView.OnIt
         setContentView(R.layout.activity_items);
 
         Intent intent = getIntent();
-        String listKey = intent.getStringExtra("list_key");
+        String listKey = intent.getStringExtra(INTENT_EXTRA_LIST_KEY);
 
         list = Store.getList(listKey);
 
@@ -49,8 +47,8 @@ public class ItemsActivity extends AppCompatActivity implements AdapterView.OnIt
         listNameTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DialogFragment dialog = new EditNameDialogFragment(list);
-                dialog.show(getFragmentManager(), null);
+                EditNameDialogFragment dialog = new EditNameDialogFragment();
+                dialog.show(getFragmentManager(), list, getString(R.string.list_name));
             }
         });
 
@@ -65,8 +63,8 @@ public class ItemsActivity extends AppCompatActivity implements AdapterView.OnIt
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DialogFragment dialog = new EditNameDialogFragment(list.child("items").push());
-                dialog.show(getFragmentManager(), null);
+                EditNameDialogFragment dialog = new EditNameDialogFragment();
+                dialog.show(getFragmentManager(), list.child("items").push(), getString(R.string.item_name));
             }
         });
     }
@@ -74,8 +72,8 @@ public class ItemsActivity extends AppCompatActivity implements AdapterView.OnIt
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
         DatabaseReference item = adapter.getItem(position);
-        DialogFragment dialog = new EditNameDialogFragment(item);
-        dialog.show(getFragmentManager(), null);
+        EditNameDialogFragment dialog = new EditNameDialogFragment();
+        dialog.show(getFragmentManager(), item, getString(R.string.item_name));
     }
 
     @Override

@@ -6,6 +6,7 @@ import android.app.DialogFragment;
 import android.app.FragmentManager;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -18,14 +19,13 @@ import android.widget.TextView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 
+import org.w3c.dom.Text;
+
 public class EditNameDialogFragment extends DialogFragment {
 
     DatabaseReference databaseReference;
+    String title;
     EditText nameEditText;
-
-    EditNameDialogFragment(DatabaseReference databaseReference) {
-        this.databaseReference = databaseReference;
-    }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -33,6 +33,9 @@ public class EditNameDialogFragment extends DialogFragment {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         View view = inflater.inflate(R.layout.edit_name_dialog, null);
+
+        TextView titleTextView = (TextView) view.findViewById(R.id.title);
+        titleTextView.setText(title);
 
         nameEditText = (EditText) view.findViewById(R.id.name);
         databaseReference.child("name").addValueEventListener(new LoggingValueEventListener() {
@@ -73,9 +76,10 @@ public class EditNameDialogFragment extends DialogFragment {
         return dialog;
     }
 
-    @Override
-    public void show(FragmentManager manager, String tag) {
-        super.show(manager, tag);
+    public void show(FragmentManager manager, DatabaseReference databaseReference, String title) {
+        this.databaseReference = databaseReference;
+        this.title = title;
+        super.show(manager, null);
     }
 
     void close() {
