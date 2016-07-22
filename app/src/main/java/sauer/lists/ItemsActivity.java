@@ -42,7 +42,7 @@ public class ItemsActivity extends AppCompatActivity implements AdapterView.OnIt
         list.child("name").addValueEventListener(new LoggingValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                listNameTextView.setText(dataSnapshot.getValue().toString());
+                listNameTextView.setText("" + dataSnapshot.getValue());
             }
         });
 
@@ -65,7 +65,8 @@ public class ItemsActivity extends AppCompatActivity implements AdapterView.OnIt
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                list.child("items").push().child("name").setValue("Item " + Math.round(100 * Math.random()));
+                DialogFragment dialog = new EditNameDialogFragment(list.child("items").push());
+                dialog.show(getFragmentManager(), null);
             }
         });
     }

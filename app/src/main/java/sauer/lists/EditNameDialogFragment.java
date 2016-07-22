@@ -6,6 +6,7 @@ import android.app.DialogFragment;
 import android.app.FragmentManager;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,7 +38,8 @@ public class EditNameDialogFragment extends DialogFragment {
         databaseReference.child("name").addValueEventListener(new LoggingValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                nameEditText.append(dataSnapshot.getValue().toString());
+                Object value = dataSnapshot.getValue();
+                nameEditText.append(value == null ? "" : value.toString());
             }
         });
 

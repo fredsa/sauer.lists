@@ -1,5 +1,6 @@
 package sauer.lists;
 
+import android.app.DialogFragment;
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -34,7 +35,8 @@ public class ListsActivity extends AppCompatActivity implements AdapterView.OnIt
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                lists.push().child("name").setValue("List " + Math.round(10000 * Math.random()));
+                DialogFragment dialog = new EditNameDialogFragment(lists.push());
+                dialog.show(getFragmentManager(), null);
             }
         });
     }
