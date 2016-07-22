@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 
 public class ListsActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
@@ -50,11 +51,16 @@ public class ListsActivity extends AppCompatActivity implements AdapterView.OnIt
 
     @Override
     public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long id) {
-        ListsAdapter adapter = (ListsAdapter) adapterView.getAdapter();
-        DatabaseReference list = adapter.getItem(position);
-        if (adapter.getItemCount()== 0) {
-            list.removeValue();
-        }
+        final ListsAdapter adapter = (ListsAdapter) adapterView.getAdapter();
+        final DatabaseReference list = adapter.getItem(position);
+        list.child("items").addListenerForSingleValueEvent(new LoggingValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (!dataSnapshot.exists()) {
+                    list.removeValue();
+                }
+            }
+        });
         return true;
     }
 }

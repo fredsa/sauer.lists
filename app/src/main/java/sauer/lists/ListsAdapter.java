@@ -21,8 +21,6 @@ public class ListsAdapter extends ArrayAdapter<DatabaseReference> implements Chi
 
     static final String TAG = ListsAdapter.class.getName();
 
-    private int itemCount= -1;
-
     public ListsAdapter(Context context, int resource, DatabaseReference lists) {
         super(context, resource, R.id.list_name);
 
@@ -50,8 +48,8 @@ public class ListsAdapter extends ArrayAdapter<DatabaseReference> implements Chi
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 HashMap<String, String> map = (HashMap<String, String>) dataSnapshot.getValue();
-                itemCount = map == null ? 0 : map.size();
-                String countText = itemCount == -1 ? "" : "(" + itemCount + ")";
+                int itemCount = map == null ? 0 : map.size();
+                String countText = "(" + itemCount + ")";
                 itemCountTextView.setText(countText);
             }
         });
@@ -87,7 +85,4 @@ public class ListsAdapter extends ArrayAdapter<DatabaseReference> implements Chi
         Log.d(TAG, databaseError.toString(), databaseError.toException());
     }
 
-    public int getItemCount() {
-        return itemCount;
-    }
 }
