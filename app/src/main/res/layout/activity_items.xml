@@ -28,7 +28,7 @@
             android:id="@+id/list_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Groceries"
+            android:text="Loading…"
             android:textAppearance="@android:style/TextAppearance.Material.Large"
             android:textColor="@color/colorAccent" />
 

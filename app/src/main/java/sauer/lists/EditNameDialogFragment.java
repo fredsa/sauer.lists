@@ -34,7 +34,7 @@ public class EditNameDialogFragment extends DialogFragment {
         View view = inflater.inflate(R.layout.edit_name_dialog, null);
 
         nameEditText = (EditText) view.findViewById(R.id.name);
-        databaseReference.child("name").addListenerForSingleValueEvent(new LoggingValueEventListener() {
+        databaseReference.child("name").addValueEventListener(new LoggingValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 nameEditText.append(dataSnapshot.getValue().toString());

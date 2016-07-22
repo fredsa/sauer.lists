@@ -1,5 +1,6 @@
 package sauer.lists;
 
+import android.app.DialogFragment;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -37,16 +38,15 @@ public class ListsAdapter extends ArrayAdapter<DatabaseReference> implements Chi
 
         final TextView listNameTextView = (TextView) view.findViewById(R.id.list_name);
         final DatabaseReference list = getItem(position);
-        list.child("name").addListenerForSingleValueEvent(new LoggingValueEventListener() {
+        list.child("name").addValueEventListener(new LoggingValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                listNameTextView.setText(dataSnapshot.getValue().toString());
+                listNameTextView.setText("" + dataSnapshot.getValue());
             }
         });
 
         final TextView itemCountTextView = (TextView) view.findViewById(R.id.item_count);
-
-        list.child("items").addListenerForSingleValueEvent(new LoggingValueEventListener() {
+        list.child("items").addValueEventListener(new LoggingValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 HashMap<String, String> map = (HashMap<String, String>) dataSnapshot.getValue();
@@ -61,25 +61,25 @@ public class ListsAdapter extends ArrayAdapter<DatabaseReference> implements Chi
 
     @Override
     public void onChildAdded(DataSnapshot dataSnapshot, String previousChildName) {
-        Log.d(TAG, "onChildAdded() " + dataSnapshot.getRef().toString() + " " + dataSnapshot.getValue());
+//        Log.d(TAG, "onChildAdded() " + dataSnapshot.getRef().toString() + " " + dataSnapshot.getValue());
         add(dataSnapshot.getRef());
     }
 
     @Override
     public void onChildChanged(DataSnapshot dataSnapshot, String previousChildName) {
-        Log.d(TAG, "onChildChanged() " + dataSnapshot.getRef().toString() + " " + dataSnapshot.getValue());
+//        Log.d(TAG, "onChildChanged() " + dataSnapshot.getRef().toString() + " " + dataSnapshot.getValue());
         notifyDataSetChanged();
     }
 
     @Override
     public void onChildRemoved(DataSnapshot dataSnapshot) {
-        Log.d(TAG, "onChildRemoved() " + dataSnapshot.getRef().toString());
+//        Log.d(TAG, "onChildRemoved() " + dataSnapshot.getRef().toString());
         remove(dataSnapshot.getRef());
     }
 
     @Override
     public void onChildMoved(DataSnapshot dataSnapshot, String previousChildName) {
-        Log.d(TAG, "onChildMoved() " + dataSnapshot.getRef().toString() + " " + dataSnapshot.getValue());
+//        Log.d(TAG, "onChildMoved() " + dataSnapshot.getRef().toString() + " " + dataSnapshot.getValue());
     }
 
     @Override

@@ -37,10 +37,10 @@ public class ItemsAdapter extends ArrayAdapter<DatabaseReference> implements Chi
 
         final TextView itemNameTextView = (TextView) view.findViewById(R.id.item_name);
         final DatabaseReference item = getItem(position);
-        item.child("name").addListenerForSingleValueEvent(new LoggingValueEventListener() {
+        item.child("name").addValueEventListener(new LoggingValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                itemNameTextView.setText(dataSnapshot.getValue().toString());
+                itemNameTextView.setText("" + dataSnapshot.getValue());
             }
         });
         itemNameTextView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -60,25 +60,25 @@ public class ItemsAdapter extends ArrayAdapter<DatabaseReference> implements Chi
 
     @Override
     public void onChildAdded(DataSnapshot dataSnapshot, String previousChildName) {
-        Log.d(TAG, "onChildAdded() " + dataSnapshot.getRef().toString() + " " + dataSnapshot.getValue());
+//        Log.d(TAG, "onChildAdded() " + dataSnapshot.getRef().toString() + " " + dataSnapshot.getValue());
         add(dataSnapshot.getRef());
     }
 
     @Override
     public void onChildChanged(DataSnapshot dataSnapshot, String previousChildName) {
-        Log.d(TAG, "onChildChanged() " + dataSnapshot.getRef().toString() + " " + dataSnapshot.getValue());
+//        Log.d(TAG, "onChildChanged() " + dataSnapshot.getRef().toString() + " " + dataSnapshot.getValue());
         notifyDataSetChanged();
     }
 
     @Override
     public void onChildRemoved(DataSnapshot dataSnapshot) {
-        Log.d(TAG, "onChildRemoved() " + dataSnapshot.getRef().toString());
+//        Log.d(TAG, "onChildRemoved() " + dataSnapshot.getRef().toString());
         remove(dataSnapshot.getRef());
     }
 
     @Override
     public void onChildMoved(DataSnapshot dataSnapshot, String previousChildName) {
-        Log.d(TAG, "onChildMoved() " + dataSnapshot.getRef().toString() + " " + dataSnapshot.getValue());
+//        Log.d(TAG, "onChildMoved() " + dataSnapshot.getRef().toString() + " " + dataSnapshot.getValue());
     }
 
     @Override
