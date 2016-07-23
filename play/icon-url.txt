@@ -1,0 +1,1 @@
+https://romannurik.github.io/AndroidAssetStudio/icons-launcher.html#foreground.type=clipart&foreground.space.trim=1&foreground.space.pad=0&foreground.clipart=res%2Fclipart%2Ficons%2Fav_playlist_add.svg&foreColor=607d8b%2C0&crop=0&backgroundShape=square&backColor=fff%2C100&effects=shadow
