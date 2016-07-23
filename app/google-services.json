@@ -15,6 +15,22 @@
       },
       "oauth_client": [
         {
+          "client_id": "460983314604-ojih2umq02f8q3ek8mac4pocts0o8909.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "sauer.lists",
+            "certificate_hash": "9795ADFB1F6E334E32613ED6AB36931DC08450A3"
+          }
+        },
+        {
+          "client_id": "460983314604-q3fc1l8blqgluqf5t7jco3pm6o3chrqo.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "sauer.lists",
+            "certificate_hash": "C1D8DDEC63B4895ED107D224C11B45B64D7566F1"
+          }
+        },
+        {
           "client_id": "460983314604-llnhd3cjss4lrb4c1kskijlrlm7vthhl.apps.googleusercontent.com",
           "client_type": 3
         }
