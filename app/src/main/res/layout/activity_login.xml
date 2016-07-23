@@ -1,19 +1,35 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center_horizontal"
-    android:orientation="vertical"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="sauer.lists.LoginActivity">
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:gravity="center_vertical|center_horizontal"
+    android:orientation="vertical">
 
-    <Button
-        android:id="@+id/signin_button"
-        style="?android:textAppearanceSmall"
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="@string/sign_in"
-        android:textStyle="bold" />
+        android:layout_marginBottom="20sp"
+        android:gravity="center_horizontal"
+        android:text="@string/tag_line"
+        android:textAppearance="@android:style/TextAppearance.Material.Medium" />
+
+    <com.google.android.gms.common.SignInButton
+        android:id="@+id/signin_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40sp"
+        android:id="@+id/signout_button"
+        android:text="@string/sign_out" />
+
+    <TextView
+        android:id="@+id/status_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40sp"
+        android:gravity="center_horizontal"
+        android:textAppearance="@android:style/TextAppearance.Material.Small" />
 
 </LinearLayout>
