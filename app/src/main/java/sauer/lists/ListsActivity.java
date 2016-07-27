@@ -8,7 +8,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 
@@ -48,10 +47,6 @@ public class ListsActivity extends AppCompatActivity implements AdapterView.OnIt
                 dialog.show(getFragmentManager(), lists.push(), getString(R.string.list_name));
             }
         });
-
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .build();
     }
 
     private void addGroceriesList(DatabaseReference lists) {
