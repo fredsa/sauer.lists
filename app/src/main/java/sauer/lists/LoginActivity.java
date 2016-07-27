@@ -78,7 +78,7 @@ public class LoginActivity extends Activity {
         signOutButton.setVisibility(isSignedIn ? View.VISIBLE : View.GONE);
 
         if (isSignedIn) {
-            setStatus("Looks like we're signed in.");
+            setStatus("Signed in as " + auth.getCurrentUser().getEmail() + ".");
         } else {
             setStatus("Please sign in.");
         }
@@ -91,7 +91,7 @@ public class LoginActivity extends Activity {
                 .signOut(this)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     public void onComplete(@NonNull Task<Void> task) {
-                        setStatus("Sign out successful");
+                        setStatus("Sign out successful.");
                         updateButtonsStates();
                     }
                 });
@@ -117,10 +117,10 @@ public class LoginActivity extends Activity {
         Log.d(TAG, "onActivityResult(" + requestCode + ", " + resultCode + ", " + data + ")");
         if (requestCode == RC_SIGN_IN) {
             if (resultCode == RESULT_OK) {
-                setStatus("Signed in succeeded");
+                setStatus("Signed in succeeded.");
                 startListsActivity();
             } else {
-                setStatus("Sign in failed");
+                setStatus("Sign in failed.");
             }
         }
     }
