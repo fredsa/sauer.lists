@@ -7,21 +7,28 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="20sp"
         android:gravity="center_horizontal"
         android:text="@string/tag_line"
         android:textAppearance="@android:style/TextAppearance.Material.Medium" />
 
     <com.google.android.gms.common.SignInButton
-        android:id="@+id/signin_button"
+        android:id="@+id/sign_in_button"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40sp" />
 
     <Button
+        android:id="@+id/contine_as_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="40sp"
-        android:id="@+id/signout_button"
+        android:text="Continue as Ford Prefect" />
+
+    <Button
+        android:id="@+id/sign_out_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40sp"
         android:text="@string/sign_out" />
 
     <TextView

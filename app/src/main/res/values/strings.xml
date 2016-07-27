@@ -5,4 +5,5 @@
     <string name="sign_in">Sign in</string>
     <string name="tag_line">Lists made simple.</string>
     <string name="sign_out">Sign out</string>
+    <string name="continue_as">Continue as %s</string>
 </resources>
