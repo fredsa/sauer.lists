@@ -14,6 +14,13 @@
         android:layout_marginTop="16sp"
         app:srcCompat="@android:drawable/ic_input_add" />
 
+    <ProgressBar
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:id="@+id/progress_bar" />
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -33,4 +40,5 @@
             android:divider="@android:drawable/divider_horizontal_textfield"
             android:dividerHeight="0dp" />
     </RelativeLayout>
+
 </FrameLayout>

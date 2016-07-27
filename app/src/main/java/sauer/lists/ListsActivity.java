@@ -26,6 +26,7 @@ public class ListsActivity extends AppCompatActivity implements AdapterView.OnIt
         lists.addListenerForSingleValueEvent(new LoggingValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                findViewById(R.id.progress_bar).setVisibility(View.GONE);
                 if (!dataSnapshot.exists()) {
                     addGroceriesList(lists);
                     addTodoList(lists);
