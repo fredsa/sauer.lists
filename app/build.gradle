@@ -8,8 +8,9 @@ android {
         applicationId "sauer.lists"
         minSdkVersion 21
         targetSdkVersion 24
-        versionCode 2
+        versionCode 3
         versionName "1.0"
+        setProperty("archivesBaseName", "$applicationId-$versionCode")
     }
     buildTypes {
         release {
