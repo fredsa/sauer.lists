@@ -1,6 +1,5 @@
 package sauer.lists;
 
-import android.app.DialogFragment;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -9,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -83,6 +83,7 @@ public class ListsAdapter extends ArrayAdapter<DatabaseReference> implements Chi
     @Override
     public void onCancelled(DatabaseError databaseError) {
         Log.d(TAG, databaseError.toString(), databaseError.toException());
+        Toast.makeText(getContext(), getClass().getName() + " failed: " + databaseError.toString(), Toast.LENGTH_LONG).show();
     }
 
 }

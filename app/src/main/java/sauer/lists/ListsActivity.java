@@ -1,15 +1,21 @@
 package sauer.lists;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 
 public class ListsActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
 
@@ -20,19 +26,41 @@ public class ListsActivity extends AppCompatActivity implements AdapterView.OnIt
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        final DatabaseReference lists = Store.lists();
+
         setContentView(R.layout.activity_lists);
 
-        final DatabaseReference lists = Store.lists();
-        lists.addListenerForSingleValueEvent(new LoggingValueEventListener() {
+        final TextView statusTextView = (TextView) findViewById(R.id.status_text);
+        statusTextView.setText("Loading…");
+
+        lists.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                findViewById(R.id.progress_bar).setVisibility(View.GONE);
+                String statusText = "Successfully retrieved " + dataSnapshot.getChildrenCount() + " lists.";
+                statusTextView.setText(statusText);
+                Log.d(getClass().getName(), statusText);
+
+                findViewById(R.id.loading_layout).setVisibility(View.GONE);
                 if (!dataSnapshot.exists()) {
                     addGroceriesList(lists);
                     addTodoList(lists);
                 }
+                dataLoaded(lists);
             }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                String errorMessage = "Failed to retrieve initial data:\n" + databaseError.toString();
+                Log.d(getClass().getName(), errorMessage, databaseError.toException());
+                statusTextView.setText(errorMessage);
+                statusTextView.setTextColor(Color.RED);
+                findViewById(R.id.progress_bar).setVisibility(View.GONE);
+            }
+
         });
+    }
+
+    private void dataLoaded(final DatabaseReference lists) {
         adapter = new ListsAdapter(getApplicationContext(), R.layout.list, lists);
 
         listView = (ListView) findViewById(R.id.list_view);
@@ -69,7 +97,7 @@ public class ListsActivity extends AppCompatActivity implements AdapterView.OnIt
         items.push().child("name").setValue("change oil");
     }
 
-        @Override
+    @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         DatabaseReference list = adapter.getItem(position);
         Intent intent = new Intent(this, ItemsActivity.class);

@@ -8,7 +8,7 @@ import com.google.firebase.database.ValueEventListener;
 public abstract class LoggingValueEventListener implements ValueEventListener {
 
     @Override
-    public final void onCancelled(DatabaseError databaseError) {
+    public void onCancelled(DatabaseError databaseError) {
         Log.d(getClass().getName(), databaseError.toString(), databaseError.toException());
     }
 
