@@ -102,7 +102,7 @@ public class ListsAdapter extends ArrayAdapter<DatabaseReference> implements Chi
     public void onCancelled(DatabaseError databaseError) {
         String msg = getClass().getName() + " failed: " + databaseError.toString() + " details: " + databaseError.getDetails();
         Log.d(TAG, msg, databaseError.toException());
-        Toast.makeText(getContext(), msg, Toast.LENGTH_LONG).show();
+        Toast.makeText(getContext(), msg, Toast.LENGTH_SHORT).show();
     }
 
 }

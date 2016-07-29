@@ -124,6 +124,7 @@ public class LoginActivity extends AppCompatActivity {
         if (requestCode == RC_SIGN_IN) {
             if (resultCode == RESULT_OK) {
                 setStatus("Signed in succeeded.");
+                updateButtonsStates();
                 startListsActivity();
             } else {
                 setStatus("Sign in failed.");

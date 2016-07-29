@@ -101,6 +101,6 @@ public class EditNameDialogFragment extends DialogFragment implements ValueEvent
     public void onCancelled(DatabaseError databaseError) {
         String msg = TAG + ":\n" + databaseError.toString() + "\n" + databaseError.getDetails();
         Log.d(TAG, msg, databaseError.toException());
-        Toast.makeText(getContext(), msg, Toast.LENGTH_LONG).show();
+        Toast.makeText(getContext(), msg, Toast.LENGTH_SHORT).show();
     }
 }

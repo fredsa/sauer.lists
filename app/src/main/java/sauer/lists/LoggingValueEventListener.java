@@ -27,7 +27,7 @@ public abstract class LoggingValueEventListener implements ValueEventListener {
     public void onCancelled(DatabaseError databaseError) {
         String msg = prefix + ":\n" + databaseError.toString() + "\n" + databaseError.getDetails();
         Log.d(getClass().getName(), msg, databaseError.toException());
-        Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
+        Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
     }
 
 }
