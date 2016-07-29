@@ -27,8 +27,7 @@ public class Store {
         return acls;
     }
 
-    public static DatabaseReference getList(String listKey)
-    {
+    public static DatabaseReference getList(String listKey) {
         init();
         return lists.child(listKey);
     }

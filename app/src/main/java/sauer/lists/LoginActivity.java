@@ -28,7 +28,7 @@ public class LoginActivity extends Activity {
     private TextView statusTextView;
     private FirebaseAuth auth;
 
-    private static boolean firstRun =true;
+    private static boolean firstRun = true;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -47,7 +47,7 @@ public class LoginActivity extends Activity {
             }
         });
 
-        continueAsButton = (Button)findViewById(R.id.contine_as_button);
+        continueAsButton = (Button) findViewById(R.id.contine_as_button);
         continueAsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
