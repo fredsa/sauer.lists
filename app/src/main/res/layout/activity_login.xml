@@ -17,8 +17,9 @@
             android:text="@string/tag_line"
             android:textAppearance="@android:style/TextAppearance.Material.Medium" />
 
-        <com.google.android.gms.common.SignInButton
+        <Button
             android:id="@+id/sign_in_button"
+            android:text="@string/sign_in"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="40sp" />

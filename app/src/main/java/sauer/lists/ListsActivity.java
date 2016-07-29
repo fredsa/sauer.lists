@@ -47,10 +47,6 @@ public class ListsActivity extends AppCompatActivity implements AdapterView.OnIt
                 Log.d(getClass().getName(), statusText);
 
                 findViewById(R.id.loading_layout).setVisibility(View.GONE);
-                if (!dataSnapshot.exists()) {
-                    addGroceriesList();
-                    addTodoList();
-                }
                 dataLoaded(listKeys);
             }
 
@@ -91,25 +87,6 @@ public class ListsActivity extends AppCompatActivity implements AdapterView.OnIt
         listPointer.setValue("OWNER");
 
         return Store.getList(listPointer.getKey());
-    }
-
-    private void addGroceriesList() {
-        DatabaseReference list = makeList();
-        list.child("name").setValue("Groceries");
-        DatabaseReference items = list.child("items");
-        items.push().child("name").setValue("fresh mozarella");
-        items.push().child("name").setValue("basil");
-        items.push().child("name").setValue("olive oil");
-        items.push().child("name").setValue("balsamic vinegar");
-    }
-
-    private void addTodoList() {
-        DatabaseReference list = makeList();
-        list.child("name").setValue("To do list");
-        DatabaseReference items = list.child("items");
-        items.push().child("name").setValue("take out trash");
-        items.push().child("name").setValue("buy HTC Vive");
-        items.push().child("name").setValue("change oil");
     }
 
     @Override

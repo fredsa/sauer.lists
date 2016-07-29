@@ -1,28 +1,27 @@
 package sauer.lists;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
 import com.firebase.ui.auth.AuthUI;
-import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 
-public class LoginActivity extends Activity {
+public class LoginActivity extends AppCompatActivity {
 
     public static final String TAG = LoginActivity.class.getName() + " *****";
     private static final int RC_SIGN_IN = 42;
 
-    private SignInButton signInButton;
+    private Button signInButton;
     private Button continueAsButton;
     private Button signOutButton;
     private TextView statusTextView;
@@ -39,7 +38,7 @@ public class LoginActivity extends Activity {
 
         statusTextView = (TextView) findViewById(R.id.status_text);
 
-        signInButton = (SignInButton) findViewById(R.id.sign_in_button);
+        signInButton = (Button) findViewById(R.id.sign_in_button);
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -110,7 +109,7 @@ public class LoginActivity extends Activity {
         startActivityForResult(
                 AuthUI.getInstance(getFirebaseApp())
                         .createSignInIntentBuilder()
-                        .setProviders(AuthUI.GOOGLE_PROVIDER)
+                        .setProviders(AuthUI.GOOGLE_PROVIDER, AuthUI.EMAIL_PROVIDER)
                         .build(),
                 RC_SIGN_IN);
     }

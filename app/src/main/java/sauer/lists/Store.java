@@ -12,7 +12,7 @@ public class Store {
     static void init() {
         if (database == null) {
             database = FirebaseDatabase.getInstance();
-            lists = database.getReference("lists2");
+            lists = database.getReference("lists");
             acls = database.getReference("acls");
         }
     }
