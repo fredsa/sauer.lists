@@ -18,10 +18,20 @@ public class ItemsAdapter extends ArrayAdapter<DatabaseReference> implements Chi
 
     static final String TAG = ItemsAdapter.class.getName();
 
-    public ItemsAdapter(Context context, int resource, DatabaseReference list) {
+    public ItemsAdapter(Context context, int resource, final DatabaseReference list) {
         super(context, resource, R.id.list_name);
 
         list.child("items").addChildEventListener(this);
+
+        list.addValueEventListener(new LoggingValueEventListener(getContext(), list.toString()) {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (!dataSnapshot.exists()) {
+                    list.child("items").removeEventListener(ItemsAdapter.this);
+                    list.removeEventListener(this);
+                }
+            }
+        });
     }
 
     @NonNull
@@ -37,12 +47,15 @@ public class ItemsAdapter extends ArrayAdapter<DatabaseReference> implements Chi
 
         final TextView itemNameTextView = (TextView) view.findViewById(R.id.item_name);
         final DatabaseReference item = getItem(position);
-        item.child("name").addValueEventListener(new LoggingValueEventListener() {
+
+        final LoggingValueEventListener nameListener = new LoggingValueEventListener(getContext(), item.child("name").toString()) {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 itemNameTextView.setText("" + dataSnapshot.getValue());
             }
-        });
+        };
+        item.child("name").addValueEventListener(nameListener);
+
         itemNameTextView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean hasFocus) {
@@ -52,6 +65,16 @@ public class ItemsAdapter extends ArrayAdapter<DatabaseReference> implements Chi
                 }
                 if (!hasFocus) {
                     item.child("name").setValue(itemNameTextView.getText().toString());
+                }
+            }
+        });
+
+        item.addValueEventListener(new LoggingValueEventListener(getContext(), item.toString()) {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (!dataSnapshot.exists()) {
+                    item.child("name").removeEventListener(nameListener);
+                    item.removeEventListener(this);
                 }
             }
         });

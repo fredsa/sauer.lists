@@ -6,7 +6,6 @@ import android.app.DialogFragment;
 import android.app.FragmentManager;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -15,15 +14,18 @@ import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 
-import org.w3c.dom.Text;
+public class EditNameDialogFragment extends DialogFragment implements ValueEventListener {
 
-public class EditNameDialogFragment extends DialogFragment {
+    private static final String TAG = EditNameDialogFragment.class.getName();
 
-    DatabaseReference databaseReference;
+    DatabaseReference nameRef;
     String title;
     EditText nameEditText;
 
@@ -38,20 +40,14 @@ public class EditNameDialogFragment extends DialogFragment {
         titleTextView.setText(title);
 
         nameEditText = (EditText) view.findViewById(R.id.name);
-        databaseReference.child("name").addValueEventListener(new LoggingValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Object value = dataSnapshot.getValue();
-                nameEditText.append(value == null ? "" : value.toString());
-            }
-        });
+        nameRef.addValueEventListener(this);
 
         nameEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
                 if (actionId == EditorInfo.IME_NULL) {
                     save();
-                    close();
+                    dismiss();
                     return true;
                 }
                 return false;
@@ -63,12 +59,12 @@ public class EditNameDialogFragment extends DialogFragment {
             @Override
             public void onClick(DialogInterface dialog, int id) {
                 save();
-                close();
+                dismiss();
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                close();
+                dismiss();
             }
         });
         AlertDialog dialog = builder.create();
@@ -76,20 +72,35 @@ public class EditNameDialogFragment extends DialogFragment {
         return dialog;
     }
 
-    public void show(FragmentManager manager, DatabaseReference databaseReference, String title) {
-        this.databaseReference = databaseReference;
+    public void show(FragmentManager manager, DatabaseReference ref, String title) {
+        this.nameRef = ref.child("name");
         this.title = title;
         super.show(manager, null);
-    }
-
-    void close() {
-        getDialog().cancel();
     }
 
     void save() {
         String value = nameEditText.getText().toString().trim();
         if (value.length() != 0) {
-            databaseReference.child("name").setValue(value);
+            nameRef.setValue(value);
         }
+    }
+
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        super.onDismiss(dialog);
+        nameRef.removeEventListener(this);
+    }
+
+    @Override
+    public void onDataChange(DataSnapshot dataSnapshot) {
+        Object value = dataSnapshot.getValue();
+        nameEditText.append(value == null ? "" : value.toString());
+    }
+
+    @Override
+    public void onCancelled(DatabaseError databaseError) {
+        String msg = TAG + ":\n" + databaseError.toString() + "\n" + databaseError.getDetails();
+        Log.d(TAG, msg, databaseError.toException());
+        Toast.makeText(getContext(), msg, Toast.LENGTH_LONG).show();
     }
 }

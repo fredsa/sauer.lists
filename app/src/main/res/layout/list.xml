@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:paddingBottom="14sp"
         android:paddingTop="14sp"
-        android:text="Groceries"
+        android:text="List name goes here"
         android:textAppearance="@android:style/TextAppearance.Material.Large"
         android:textColor="@color/colorAccent" />
 

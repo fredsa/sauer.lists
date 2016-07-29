@@ -37,12 +37,13 @@ public class ItemsActivity extends AppCompatActivity implements AdapterView.OnIt
         listNameTextView = (TextView) findViewById(R.id.list_name);
 
 
-        list.child("name").addValueEventListener(new LoggingValueEventListener() {
+        final LoggingValueEventListener nameListener = new LoggingValueEventListener(getApplicationContext(), list.child("name").toString()) {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 listNameTextView.setText("" + dataSnapshot.getValue());
             }
-        });
+        };
+        list.child("name").addValueEventListener(nameListener);
 
         listNameTextView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,6 +66,16 @@ public class ItemsActivity extends AppCompatActivity implements AdapterView.OnIt
             public void onClick(View view) {
                 EditNameDialogFragment dialog = new EditNameDialogFragment();
                 dialog.show(getFragmentManager(), list.child("items").push(), getString(R.string.item_name));
+            }
+        });
+
+        list.addValueEventListener(new LoggingValueEventListener(getApplicationContext(), list.toString()) {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (!dataSnapshot.exists()) {
+                    list.child("name").removeEventListener(nameListener);
+                    list.removeEventListener(this);
+                }
             }
         });
     }

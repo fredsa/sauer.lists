@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "sauer.lists"
-        minSdkVersion 21
+        minSdkVersion 23
         targetSdkVersion 24
         versionCode 3
         versionName "1.0"

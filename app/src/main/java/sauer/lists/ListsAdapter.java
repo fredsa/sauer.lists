@@ -14,6 +14,7 @@ import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
 
@@ -21,10 +22,10 @@ public class ListsAdapter extends ArrayAdapter<DatabaseReference> implements Chi
 
     static final String TAG = ListsAdapter.class.getName();
 
-    public ListsAdapter(Context context, int resource, DatabaseReference lists) {
+    public ListsAdapter(Context context, int resource, DatabaseReference listKeys) {
         super(context, resource, R.id.list_name);
 
-        lists.addChildEventListener(this);
+        listKeys.addChildEventListener(this);
     }
 
     @NonNull
@@ -36,21 +37,35 @@ public class ListsAdapter extends ArrayAdapter<DatabaseReference> implements Chi
 
         final TextView listNameTextView = (TextView) view.findViewById(R.id.list_name);
         final DatabaseReference list = getItem(position);
-        list.child("name").addValueEventListener(new LoggingValueEventListener() {
+
+        final LoggingValueEventListener nameListener = new LoggingValueEventListener(getContext(), list.child("name").toString()) {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 listNameTextView.setText("" + dataSnapshot.getValue());
             }
-        });
+        };
+        list.child("name").addValueEventListener(nameListener);
 
         final TextView itemCountTextView = (TextView) view.findViewById(R.id.item_count);
-        list.child("items").addValueEventListener(new LoggingValueEventListener() {
+        final LoggingValueEventListener itemsListener = new LoggingValueEventListener(getContext(), list.child("items").toString()) {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 HashMap<String, String> map = (HashMap<String, String>) dataSnapshot.getValue();
                 int itemCount = map == null ? 0 : map.size();
                 String countText = "(" + itemCount + ")";
                 itemCountTextView.setText(countText);
+            }
+        };
+        list.child("items").addValueEventListener(itemsListener);
+
+        list.addValueEventListener(new LoggingValueEventListener(getContext(), list.toString()) {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (!dataSnapshot.exists()) {
+                    list.child("name").removeEventListener(nameListener);
+                    list.child("items").removeEventListener(itemsListener);
+                    list.removeEventListener(this);
+                }
             }
         });
 
@@ -60,7 +75,7 @@ public class ListsAdapter extends ArrayAdapter<DatabaseReference> implements Chi
     @Override
     public void onChildAdded(DataSnapshot dataSnapshot, String previousChildName) {
 //        Log.d(TAG, "onChildAdded() " + dataSnapshot.getRef().toString() + " " + dataSnapshot.getValue());
-        add(dataSnapshot.getRef());
+        add(Store.getList(dataSnapshot.getKey()));
     }
 
     @Override
@@ -72,7 +87,7 @@ public class ListsAdapter extends ArrayAdapter<DatabaseReference> implements Chi
     @Override
     public void onChildRemoved(DataSnapshot dataSnapshot) {
 //        Log.d(TAG, "onChildRemoved() " + dataSnapshot.getRef().toString());
-        remove(dataSnapshot.getRef());
+        remove(Store.getList(dataSnapshot.getKey()));
     }
 
     @Override
@@ -82,8 +97,9 @@ public class ListsAdapter extends ArrayAdapter<DatabaseReference> implements Chi
 
     @Override
     public void onCancelled(DatabaseError databaseError) {
-        Log.d(TAG, databaseError.toString(), databaseError.toException());
-        Toast.makeText(getContext(), getClass().getName() + " failed: " + databaseError.toString(), Toast.LENGTH_LONG).show();
+        String msg = getClass().getName() + " failed: " + databaseError.toString() + " details: " + databaseError.getDetails();
+        Log.d(TAG, msg, databaseError.toException());
+        Toast.makeText(getContext(), msg, Toast.LENGTH_LONG).show();
     }
 
 }

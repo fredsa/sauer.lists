@@ -28,6 +28,8 @@ public class LoginActivity extends Activity {
     private TextView statusTextView;
     private FirebaseAuth auth;
 
+    private static boolean firstRun =true;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,7 +64,12 @@ public class LoginActivity extends Activity {
         });
 
         auth = FirebaseAuth.getInstance();
-        updateButtonsStates();
+        if (firstRun && auth.getCurrentUser() != null) {
+            firstRun = false;
+            startListsActivity();
+        } else {
+            updateButtonsStates();
+        }
     }
 
     private void updateButtonsStates() {
@@ -126,7 +133,11 @@ public class LoginActivity extends Activity {
     }
 
     private void startListsActivity() {
-        startActivity(new Intent(this, ListsActivity.class));
+
+        Intent intent = new Intent(this, ListsActivity.class);
+        intent.putExtra("email", auth.getCurrentUser().getEmail());
+        intent.putExtra("uid", auth.getCurrentUser().getUid());
+        startActivity(intent);
     }
 
     public void setStatus(String text) {
