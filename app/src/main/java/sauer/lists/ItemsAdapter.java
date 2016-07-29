@@ -45,12 +45,14 @@ public class ItemsAdapter extends ArrayAdapter<DatabaseReference> implements Chi
         String itemNumber = (position + 1) + ".";
         itemNumberTextView.setText(itemNumber);
 
-        final TextView itemNameTextView = (TextView) view.findViewById(R.id.item_name);
         final DatabaseReference item = getItem(position);
 
+        final TextView itemNameTextView = (TextView) view.findViewById(R.id.item_name);
+        itemNameTextView.setVisibility(View.INVISIBLE);
         final LoggingValueEventListener nameListener = new LoggingValueEventListener(getContext(), item.child("name").toString()) {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                itemNameTextView.setVisibility(View.VISIBLE);
                 itemNameTextView.setText("" + dataSnapshot.getValue());
             }
         };

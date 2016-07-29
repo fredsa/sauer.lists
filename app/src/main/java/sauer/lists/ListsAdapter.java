@@ -35,21 +35,25 @@ public class ListsAdapter extends ArrayAdapter<DatabaseReference> implements Chi
                 (Context.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(R.layout.list, null);
 
-        final TextView listNameTextView = (TextView) view.findViewById(R.id.list_name);
         final DatabaseReference list = getItem(position);
 
+        final TextView listNameTextView = (TextView) view.findViewById(R.id.list_name);
+        listNameTextView.setVisibility(View.INVISIBLE);
         final LoggingValueEventListener nameListener = new LoggingValueEventListener(getContext(), list.child("name").toString()) {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                listNameTextView.setVisibility(View.VISIBLE);
                 listNameTextView.setText("" + dataSnapshot.getValue());
             }
         };
         list.child("name").addValueEventListener(nameListener);
 
         final TextView itemCountTextView = (TextView) view.findViewById(R.id.item_count);
+        itemCountTextView.setVisibility(View.INVISIBLE);
         final LoggingValueEventListener itemsListener = new LoggingValueEventListener(getContext(), list.child("items").toString()) {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                itemCountTextView.setVisibility(View.VISIBLE);
                 HashMap<String, String> map = (HashMap<String, String>) dataSnapshot.getValue();
                 int itemCount = map == null ? 0 : map.size();
                 String countText = "(" + itemCount + ")";
