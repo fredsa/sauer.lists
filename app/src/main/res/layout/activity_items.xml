@@ -11,7 +11,8 @@
         android:layout_gravity="right"
         android:layout_marginRight="16sp"
         android:layout_marginTop="16sp"
-        app:srcCompat="@android:drawable/ic_input_add" />
+        app:srcCompat="@android:drawable/ic_input_add"
+        app:backgroundTint="?attr/colorPrimary" />
 
 
     <LinearLayout
