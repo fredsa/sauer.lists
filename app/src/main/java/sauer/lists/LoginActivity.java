@@ -11,8 +11,6 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.firebase.ui.auth.AuthUI;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -63,12 +61,12 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         auth = FirebaseAuth.getInstance();
-        if (firstRun && auth.getCurrentUser() != null) {
-            firstRun = false;
-            startListsActivity();
-        } else {
-            updateButtonsStates();
-        }
+        auth.addAuthStateListener(new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                updateButtonsStates();
+            }
+        });
     }
 
     private void updateButtonsStates() {
@@ -88,19 +86,18 @@ public class LoginActivity extends AppCompatActivity {
         } else {
             setStatus("Please sign in.");
         }
+
+        if (firstRun && isSignedIn) {
+            firstRun = false;
+            startListsActivity();
+        }
     }
 
     private void signOut() {
         Log.d(TAG, "Signing out…");
         setStatus("Signing out…");
         AuthUI.getInstance(getFirebaseApp())
-                .signOut(this)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    public void onComplete(@NonNull Task<Void> task) {
-                        setStatus("Sign out successful.");
-                        updateButtonsStates();
-                    }
-                });
+                .signOut(this);
     }
 
     private void signIn() {
@@ -123,11 +120,7 @@ public class LoginActivity extends AppCompatActivity {
         Log.d(TAG, "onActivityResult(" + requestCode + ", " + resultCode + ", " + data + ")");
         if (requestCode == RC_SIGN_IN) {
             if (resultCode == RESULT_OK) {
-                setStatus("Signed in succeeded.");
-                updateButtonsStates();
                 startListsActivity();
-            } else {
-                setStatus("Sign in failed.");
             }
         }
     }
