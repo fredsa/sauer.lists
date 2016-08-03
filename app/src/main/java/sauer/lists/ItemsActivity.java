@@ -18,6 +18,7 @@ public class ItemsActivity extends AppCompatActivity {
     public static final String INTENT_EXTRA_LIST_KEY = "list_key";
 
     private RecyclerView recyclerView;
+    private TextView emptyListTextView;
     private TextView listNameTextView;
     private ItemsRecyclerViewAdapter adapter;
     private DatabaseReference list;
@@ -34,15 +35,17 @@ public class ItemsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_items);
 
         listNameTextView = (TextView) findViewById(R.id.list_name);
+        emptyListTextView = (TextView) findViewById(R.id.empty_list);
 
-        final LoggingValueEventListener nameListener =
-                new LoggingValueEventListener(getApplicationContext(), list.child("name")) {
+        final LoggingValueEventListener valueEventListener =
+                new LoggingValueEventListener(getApplicationContext(), list) {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        listNameTextView.setText("" + dataSnapshot.getValue());
+                        emptyListTextView.setVisibility(dataSnapshot.child("items").exists() ? View.GONE : View.VISIBLE);
+                        listNameTextView.setText("" + dataSnapshot.child("name").getValue());
                     }
                 };
-        list.child("name").addValueEventListener(nameListener);
+        list.addValueEventListener(valueEventListener);
 
         listNameTextView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,7 +76,7 @@ public class ItemsActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (!dataSnapshot.exists()) {
-                    list.child("name").removeEventListener(nameListener);
+                    list.removeEventListener(valueEventListener);
                     list.removeEventListener(this);
                 }
             }

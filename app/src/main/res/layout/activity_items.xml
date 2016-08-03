@@ -33,6 +33,13 @@
             android:textAppearance="@android:style/TextAppearance.Material.Large"
             android:textColor="@color/colorAccent" />
 
+
+        <TextView
+            android:id="@+id/empty_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/empty_list" />
+
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
