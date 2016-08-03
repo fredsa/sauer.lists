@@ -23,7 +23,7 @@ public class ItemsAdapter extends ArrayAdapter<DatabaseReference> implements Chi
 
         list.child("items").addChildEventListener(this);
 
-        list.addValueEventListener(new LoggingValueEventListener(getContext(), list.toString()) {
+        list.addValueEventListener(new LoggingValueEventListener(getContext(), list) {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (!dataSnapshot.exists()) {
@@ -49,7 +49,7 @@ public class ItemsAdapter extends ArrayAdapter<DatabaseReference> implements Chi
 
         final TextView itemNameTextView = (TextView) view.findViewById(R.id.item_name);
         itemNameTextView.setVisibility(View.INVISIBLE);
-        final LoggingValueEventListener nameListener = new LoggingValueEventListener(getContext(), item.child("name").toString()) {
+        final LoggingValueEventListener nameListener = new LoggingValueEventListener(getContext(), item.child("name")) {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 itemNameTextView.setVisibility(View.VISIBLE);
@@ -71,7 +71,7 @@ public class ItemsAdapter extends ArrayAdapter<DatabaseReference> implements Chi
             }
         });
 
-        item.addValueEventListener(new LoggingValueEventListener(getContext(), item.toString()) {
+        item.addValueEventListener(new LoggingValueEventListener(getContext(), item) {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (!dataSnapshot.exists()) {

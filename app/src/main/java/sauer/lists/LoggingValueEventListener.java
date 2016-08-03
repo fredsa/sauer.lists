@@ -5,6 +5,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
 public abstract class LoggingValueEventListener implements ValueEventListener {
@@ -13,21 +14,16 @@ public abstract class LoggingValueEventListener implements ValueEventListener {
 
     private String prefix;
 
-//    public LoggingValueEventListener(Context context) {
-//        this.context = context;
-//        this.prefix = getClass().getName();
-//    }
-
-    public LoggingValueEventListener(Context context, String prefix) {
+    public LoggingValueEventListener(Context context, DatabaseReference ref) {
         this.context = context;
-        this.prefix = getClass().getName() + "#" + prefix;
+        this.prefix = getClass().getName() + "#" + ref.toString();
     }
 
     @Override
     public void onCancelled(DatabaseError databaseError) {
         String msg = prefix + ":\n" + databaseError.toString() + "\n" + databaseError.getDetails();
         Log.d(getClass().getName(), msg, databaseError.toException());
-        Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
     }
 
 }

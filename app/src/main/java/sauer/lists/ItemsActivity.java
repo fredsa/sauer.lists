@@ -37,7 +37,7 @@ public class ItemsActivity extends AppCompatActivity implements AdapterView.OnIt
         listNameTextView = (TextView) findViewById(R.id.list_name);
 
 
-        final LoggingValueEventListener nameListener = new LoggingValueEventListener(getApplicationContext(), list.child("name").toString()) {
+        final LoggingValueEventListener nameListener = new LoggingValueEventListener(getApplicationContext(), list.child("name")) {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 listNameTextView.setText("" + dataSnapshot.getValue());
@@ -69,7 +69,7 @@ public class ItemsActivity extends AppCompatActivity implements AdapterView.OnIt
             }
         });
 
-        list.addValueEventListener(new LoggingValueEventListener(getApplicationContext(), list.toString()) {
+        list.addValueEventListener(new LoggingValueEventListener(getApplicationContext(), list) {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (!dataSnapshot.exists()) {

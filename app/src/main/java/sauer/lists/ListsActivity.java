@@ -1,14 +1,13 @@
 package sauer.lists;
 
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -17,13 +16,14 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
-public class ListsActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
+public class ListsActivity extends AppCompatActivity {
 
     private static final String TAG = ListsActivity.class.getName();
 
-    ListView listView;
-    ListsAdapter adapter;
+    RecyclerView recyclerView;
+    ListsRecyclerViewAdapter adapter;
     private DatabaseReference listKeys;
+    private LinearLayoutManager layoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,12 +64,13 @@ public class ListsActivity extends AppCompatActivity implements AdapterView.OnIt
     }
 
     private void dataLoaded(final DatabaseReference listKeys) {
-        adapter = new ListsAdapter(getApplicationContext(), R.layout.list, listKeys);
+        recyclerView = (RecyclerView) findViewById(R.id.list_view);
 
-        listView = (ListView) findViewById(R.id.list_view);
-        listView.setAdapter(adapter);
-        listView.setOnItemClickListener(this);
-        listView.setOnItemLongClickListener(this);
+        layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+
+        adapter = new ListsRecyclerViewAdapter(getApplicationContext(), listKeys);
+        recyclerView.setAdapter(adapter);
 
         FloatingActionButton addButton = (FloatingActionButton) findViewById(R.id.add_button);
         addButton.setVisibility(View.VISIBLE);
@@ -89,20 +90,4 @@ public class ListsActivity extends AppCompatActivity implements AdapterView.OnIt
         return Store.getList(listPointer.getKey());
     }
 
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        DatabaseReference list = adapter.getItem(position);
-        Intent intent = new Intent(this, ItemsActivity.class);
-        intent.putExtra(ItemsActivity.INTENT_EXTRA_LIST_KEY, list.getKey().toString());
-        startActivity(intent);
-    }
-
-    @Override
-    public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long id) {
-        final ListsAdapter adapter = (ListsAdapter) adapterView.getAdapter();
-        final DatabaseReference list = adapter.getItem(position);
-        list.removeValue();
-        listKeys.child(list.getKey()).removeValue();
-        return true;
-    }
 }
