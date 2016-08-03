@@ -4,45 +4,44 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 
-public class ItemsActivity extends AppCompatActivity implements AdapterView.OnItemLongClickListener, AdapterView.OnItemClickListener {
+public class ItemsActivity extends AppCompatActivity {
 
     public static final String INTENT_EXTRA_LIST_KEY = "list_key";
 
-    ListView listView;
-    TextView listNameTextView;
-
-    ItemsAdapter adapter;
-
-    DatabaseReference list;
+    private RecyclerView recyclerView;
+    private TextView listNameTextView;
+    private ItemsRecyclerViewAdapter adapter;
+    private DatabaseReference list;
+    private LinearLayoutManager layoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_items);
-
         Intent intent = getIntent();
         String listKey = intent.getStringExtra(INTENT_EXTRA_LIST_KEY);
-
         list = Store.getList(listKey);
+
+        setContentView(R.layout.activity_items);
 
         listNameTextView = (TextView) findViewById(R.id.list_name);
 
-
-        final LoggingValueEventListener nameListener = new LoggingValueEventListener(getApplicationContext(), list.child("name")) {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                listNameTextView.setText("" + dataSnapshot.getValue());
-            }
-        };
+        final LoggingValueEventListener nameListener =
+                new LoggingValueEventListener(getApplicationContext(), list.child("name")) {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        listNameTextView.setText("" + dataSnapshot.getValue());
+                    }
+                };
         list.child("name").addValueEventListener(nameListener);
 
         listNameTextView.setOnClickListener(new View.OnClickListener() {
@@ -53,12 +52,13 @@ public class ItemsActivity extends AppCompatActivity implements AdapterView.OnIt
             }
         });
 
-        adapter = new ItemsAdapter(getApplicationContext(), R.layout.list, list);
+        recyclerView = (RecyclerView) findViewById(R.id.list_view);
 
-        listView = (ListView) findViewById(R.id.list_view);
-        listView.setAdapter(adapter);
-        listView.setOnItemClickListener(this);
-        listView.setOnItemLongClickListener(this);
+        layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+
+        adapter = new ItemsRecyclerViewAdapter(getApplicationContext(),getFragmentManager(), list);
+        recyclerView.setAdapter(adapter);
 
         FloatingActionButton addButton = (FloatingActionButton) findViewById(R.id.add_button);
         addButton.setOnClickListener(new View.OnClickListener() {
@@ -78,20 +78,6 @@ public class ItemsActivity extends AppCompatActivity implements AdapterView.OnIt
                 }
             }
         });
-    }
-
-    @Override
-    public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-        DatabaseReference item = adapter.getItem(position);
-        EditNameDialogFragment dialog = new EditNameDialogFragment();
-        dialog.show(getFragmentManager(), item, getString(R.string.item_name));
-    }
-
-    @Override
-    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-        DatabaseReference item = adapter.getItem(position);
-        item.removeValue();
-        return true;
     }
 
 }

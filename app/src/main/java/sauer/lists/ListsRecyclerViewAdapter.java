@@ -25,8 +25,8 @@ public class ListsRecyclerViewAdapter extends RecyclerView.Adapter<ListsRecycler
 
     static final String TAG = ListsRecyclerViewAdapter.class.getName();
 
-    private final DatabaseReference listKeys;
     private final Context activityContext;
+    private final DatabaseReference listKeys;
 
     private ArrayList<DatabaseReference> lists = new ArrayList<>();
 

@@ -20,8 +20,8 @@ public class ListsActivity extends AppCompatActivity {
 
     private static final String TAG = ListsActivity.class.getName();
 
-    RecyclerView recyclerView;
-    ListsRecyclerViewAdapter adapter;
+    private RecyclerView recyclerView;
+    private ListsRecyclerViewAdapter adapter;
     private DatabaseReference listKeys;
     private LinearLayoutManager layoutManager;
 
@@ -29,12 +29,10 @@ public class ListsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        Log.d(TAG, "uid: " + uid);
-
-        listKeys = Store.getUserListKeys(uid);
-
         setContentView(R.layout.activity_lists);
+
+        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        listKeys = Store.getUserListKeys(uid);
 
         final TextView statusTextView = (TextView) findViewById(R.id.status_text);
         statusTextView.setText("Loading…");
@@ -58,9 +56,7 @@ public class ListsActivity extends AppCompatActivity {
                 statusTextView.setTextColor(Color.RED);
                 findViewById(R.id.progress_bar).setVisibility(View.GONE);
             }
-
         });
-
     }
 
     private void dataLoaded(final DatabaseReference listKeys) {
