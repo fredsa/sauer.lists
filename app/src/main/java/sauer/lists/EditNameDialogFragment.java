@@ -25,9 +25,10 @@ public class EditNameDialogFragment extends DialogFragment implements ValueEvent
 
     private static final String TAG = EditNameDialogFragment.class.getName();
 
-    DatabaseReference nameRef;
-    String title;
-    EditText nameEditText;
+    private DatabaseReference nameRef;
+    private String title;
+    private EditText nameEditText;
+    private String defaultValue;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {

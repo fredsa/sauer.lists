@@ -1,8 +1,6 @@
 package sauer.lists;
 
 import android.app.FragmentManager;
-import android.content.Context;
-import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,15 +13,12 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
-
 public class ItemsRecyclerViewAdapter extends RecyclerView.Adapter<ItemsRecyclerViewAdapter.ViewHolder> {
 
     static final String TAG = ItemsRecyclerViewAdapter.class.getName();
 
-    private final Context activityContext;
+    private RecyclerView recyclerView;
     private FragmentManager fragmentManager;
-    private final DatabaseReference list;
 
     private ArrayList<DatabaseReference> items = new ArrayList<>();
 
@@ -49,10 +44,14 @@ public class ItemsRecyclerViewAdapter extends RecyclerView.Adapter<ItemsRecycler
         }
     }
 
-    public ItemsRecyclerViewAdapter(Context activityContext, FragmentManager fragmentManager, DatabaseReference list) {
-        this.activityContext = activityContext;
+    public ItemsRecyclerViewAdapter(FragmentManager fragmentManager) {
         this.fragmentManager = fragmentManager;
-        this.list = list;
+    }
+
+    @Override
+    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+        super.onAttachedToRecyclerView(recyclerView);
+        this.recyclerView = recyclerView;
     }
 
     @Override
@@ -86,7 +85,7 @@ public class ItemsRecyclerViewAdapter extends RecyclerView.Adapter<ItemsRecycler
         holder.itemNameTextView.setVisibility(View.INVISIBLE);
 
         holder.item = items.get(position);
-        holder.valueEventListener = new LoggingValueEventListener(activityContext, holder.item) {
+        holder.valueEventListener = new LoggingValueEventListener(recyclerView.getContext(), holder.item) {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 //                        if (!dataSnapshot.exists()) {
@@ -103,12 +102,8 @@ public class ItemsRecyclerViewAdapter extends RecyclerView.Adapter<ItemsRecycler
             public void onClick(View view) {
                 DatabaseReference item = items.get(position);
                 EditNameDialogFragment dialog = new EditNameDialogFragment();
-                dialog.show(fragmentManager, item, activityContext.getString(R.string.item_name));
+                dialog.show(fragmentManager, item, recyclerView.getContext().getString(R.string.item_name));
 
-                Intent intent = new Intent(activityContext, ItemsActivity.class);
-                intent.putExtra(ItemsActivity.INTENT_EXTRA_LIST_KEY, list.getKey().toString());
-                intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
-                activityContext.startActivity(intent);
             }
         });
 

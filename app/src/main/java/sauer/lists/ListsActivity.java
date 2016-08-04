@@ -22,10 +22,8 @@ public class ListsActivity extends AppCompatActivity implements ChildEventListen
 
     private static final String TAG = ListsActivity.class.getName();
 
-    private RecyclerView recyclerView;
     private ListsRecyclerViewAdapter adapter;
     private DatabaseReference listKeys;
-    private LinearLayoutManager layoutManager;
     private ValueEventListener valueEventListener;
 
     @Override
@@ -37,14 +35,13 @@ public class ListsActivity extends AppCompatActivity implements ChildEventListen
         String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         listKeys = Store.getUserListKeys(uid);
 
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.list_view);
 
-        recyclerView = (RecyclerView) findViewById(R.id.list_view);
-
-        layoutManager = new LinearLayoutManager(this);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         layoutManager.setRecycleChildrenOnDetach(true);
 
-        adapter = new ListsRecyclerViewAdapter(getApplicationContext(), listKeys);
+        adapter = new ListsRecyclerViewAdapter(listKeys);
         recyclerView.setAdapter(adapter);
 
         FloatingActionButton addButton = (FloatingActionButton) findViewById(R.id.add_button);
@@ -52,11 +49,24 @@ public class ListsActivity extends AppCompatActivity implements ChildEventListen
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                DatabaseReference list = makeList();
                 EditNameDialogFragment dialog = new EditNameDialogFragment();
-                dialog.show(getFragmentManager(), makeList(), getString(R.string.list_name));
+                dialog.show(getFragmentManager(), list, getString(R.string.list_name));
             }
         });
 
+        valueEventListener = new LoggingValueEventListener(getApplicationContext(), listKeys) {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                findViewById(R.id.no_lists).setVisibility(dataSnapshot.exists() ? View.GONE : View.VISIBLE);
+            }
+        };
+
+        showLoadingSpinner();
+
+    }
+
+    private void showLoadingSpinner() {
         final TextView statusTextView = (TextView) findViewById(R.id.status_text);
         statusTextView.setText("Loading…");
 
@@ -79,13 +89,6 @@ public class ListsActivity extends AppCompatActivity implements ChildEventListen
                 findViewById(R.id.progress_bar).setVisibility(View.GONE);
             }
         });
-
-        valueEventListener = new LoggingValueEventListener(getApplicationContext(), listKeys) {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                findViewById(R.id.no_lists).setVisibility(dataSnapshot.exists() ? View.GONE : View.VISIBLE);
-            }
-        };
     }
 
     @Override

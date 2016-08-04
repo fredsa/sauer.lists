@@ -20,14 +20,12 @@ public class ItemsActivity extends AppCompatActivity implements ChildEventListen
 
     private static final String TAG = ItemsActivity.class.getName();
 
-    public static final String INTENT_EXTRA_LIST_KEY = "list_key";
+    static final String INTENT_EXTRA_LIST_KEY = "list_key";
 
-    private RecyclerView recyclerView;
     private TextView emptyListTextView;
     private TextView listNameTextView;
     private ItemsRecyclerViewAdapter adapter;
     private DatabaseReference list;
-    private LinearLayoutManager layoutManager;
     private LoggingValueEventListener valueEventListener;
 
     @Override
@@ -36,6 +34,7 @@ public class ItemsActivity extends AppCompatActivity implements ChildEventListen
 
         Intent intent = getIntent();
         String listKey = intent.getStringExtra(INTENT_EXTRA_LIST_KEY);
+        assert listKey !=null;
         list = Store.getList(listKey);
 
         setContentView(R.layout.activity_items);
@@ -46,11 +45,8 @@ public class ItemsActivity extends AppCompatActivity implements ChildEventListen
         valueEventListener = new LoggingValueEventListener(getApplicationContext(), list) {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if (!dataSnapshot.exists()) {
-                    list.removeEventListener(this);
-                }
                 emptyListTextView.setVisibility(dataSnapshot.child("items").exists() ? View.GONE : View.VISIBLE);
-                listNameTextView.setText("" + dataSnapshot.child("name").getValue());
+                listNameTextView.setText(Utils.GetListNameFromSnapshot(dataSnapshot));
             }
         };
 
@@ -62,13 +58,13 @@ public class ItemsActivity extends AppCompatActivity implements ChildEventListen
             }
         });
 
-        recyclerView = (RecyclerView) findViewById(R.id.list_view);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.list_view);
 
-        layoutManager = new LinearLayoutManager(this);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         layoutManager.setRecycleChildrenOnDetach(true);
 
-        adapter = new ItemsRecyclerViewAdapter(getApplicationContext(), getFragmentManager(), list);
+        adapter = new ItemsRecyclerViewAdapter(getFragmentManager());
         recyclerView.setAdapter(adapter);
 
         FloatingActionButton addButton = (FloatingActionButton) findViewById(R.id.add_button);
