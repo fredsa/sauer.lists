@@ -6,14 +6,19 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 
-public class ItemsActivity extends AppCompatActivity {
+public class ItemsActivity extends AppCompatActivity implements ChildEventListener {
+
+    private static final String TAG = ItemsActivity.class.getName();
 
     public static final String INTENT_EXTRA_LIST_KEY = "list_key";
 
@@ -23,6 +28,7 @@ public class ItemsActivity extends AppCompatActivity {
     private ItemsRecyclerViewAdapter adapter;
     private DatabaseReference list;
     private LinearLayoutManager layoutManager;
+    private LoggingValueEventListener valueEventListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,15 +43,16 @@ public class ItemsActivity extends AppCompatActivity {
         listNameTextView = (TextView) findViewById(R.id.list_name);
         emptyListTextView = (TextView) findViewById(R.id.empty_list);
 
-        final LoggingValueEventListener valueEventListener =
-                new LoggingValueEventListener(getApplicationContext(), list) {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        emptyListTextView.setVisibility(dataSnapshot.child("items").exists() ? View.GONE : View.VISIBLE);
-                        listNameTextView.setText("" + dataSnapshot.child("name").getValue());
-                    }
-                };
-        list.addValueEventListener(valueEventListener);
+        valueEventListener = new LoggingValueEventListener(getApplicationContext(), list) {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (!dataSnapshot.exists()) {
+                    list.removeEventListener(this);
+                }
+                emptyListTextView.setVisibility(dataSnapshot.child("items").exists() ? View.GONE : View.VISIBLE);
+                listNameTextView.setText("" + dataSnapshot.child("name").getValue());
+            }
+        };
 
         listNameTextView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,8 +66,9 @@ public class ItemsActivity extends AppCompatActivity {
 
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
+        layoutManager.setRecycleChildrenOnDetach(true);
 
-        adapter = new ItemsRecyclerViewAdapter(getApplicationContext(),getFragmentManager(), list);
+        adapter = new ItemsRecyclerViewAdapter(getApplicationContext(), getFragmentManager(), list);
         recyclerView.setAdapter(adapter);
 
         FloatingActionButton addButton = (FloatingActionButton) findViewById(R.id.add_button);
@@ -71,16 +79,53 @@ public class ItemsActivity extends AppCompatActivity {
                 dialog.show(getFragmentManager(), list.child("items").push(), getString(R.string.item_name));
             }
         });
+    }
 
-        list.addValueEventListener(new LoggingValueEventListener(getApplicationContext(), list) {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (!dataSnapshot.exists()) {
-                    list.removeEventListener(valueEventListener);
-                    list.removeEventListener(this);
-                }
-            }
-        });
+    @Override
+    protected void onStop() {
+        super.onStop();
+        list.removeEventListener(valueEventListener);
+        list.child("items").removeEventListener(this);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        list.addValueEventListener(valueEventListener);
+        list.child("items").addChildEventListener(this);
+    }
+
+    @Override
+    public void onChildAdded(DataSnapshot dataSnapshot, String previousChildName) {
+//        Log.d(TAG, "onChildAdded() " + dataSnapshot.getRef().toString() + " " + dataSnapshot.getValue());
+        adapter.add(dataSnapshot.getRef());
+//        notifyDataSetChanged();
+    }
+
+    @Override
+    public void onChildChanged(DataSnapshot dataSnapshot, String previousChildName) {
+        Log.d(TAG, "onChildChanged() " + dataSnapshot.getRef().toString() + " " + dataSnapshot.getValue());
+//        notifyDataSetChanged();
+    }
+
+    @Override
+    public void onChildRemoved(DataSnapshot dataSnapshot) {
+//        Log.d(TAG, "onChildRemoved() " + dataSnapshot.getRef().toString());
+        adapter.remove(dataSnapshot.getRef());
+//        notifyDataSetChanged();
+    }
+
+    @Override
+    public void onChildMoved(DataSnapshot dataSnapshot, String previousChildName) {
+        Log.d(TAG, "onChildMoved() " + dataSnapshot.getRef().toString() + " " + dataSnapshot.getValue());
+//        notifyDataSetChanged();
+    }
+
+    @Override
+    public void onCancelled(DatabaseError databaseError) {
+        String msg = getClass().getName() + " failed: " + databaseError.toString() + " details: " + databaseError.getDetails();
+        Log.d(TAG, msg, databaseError.toException());
+        Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
     }
 
 }

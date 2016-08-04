@@ -10,7 +10,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".ListsActivity"
-            android:parentActivityName=".LoginActivity" />
+            android:parentActivityName=".LoginActivity"/>
         <activity
             android:name=".ItemsActivity"
             android:parentActivityName=".ListsActivity" />

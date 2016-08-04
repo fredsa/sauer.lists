@@ -8,4 +8,5 @@
     <string name="continue_as">Continue as %s</string>
     <string name="loading">Loading…</string>
     <string name="empty_list">Empty list.</string>
+    <string name="no_lists">You don\'t have any lists.</string>
 </resources>
