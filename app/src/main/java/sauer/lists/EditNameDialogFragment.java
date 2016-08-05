@@ -28,7 +28,6 @@ public class EditNameDialogFragment extends DialogFragment implements ValueEvent
     private DatabaseReference nameRef;
     private String title;
     private EditText nameEditText;
-    private String defaultValue;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -94,8 +93,7 @@ public class EditNameDialogFragment extends DialogFragment implements ValueEvent
 
     @Override
     public void onDataChange(DataSnapshot dataSnapshot) {
-        Object value = dataSnapshot.getValue();
-        nameEditText.append(value == null ? "" : value.toString());
+        nameEditText.append(Utils.GetNameFromSnapshot(dataSnapshot, ""));
     }
 
     @Override

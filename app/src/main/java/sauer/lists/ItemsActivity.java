@@ -34,7 +34,7 @@ public class ItemsActivity extends AppCompatActivity implements ChildEventListen
 
         Intent intent = getIntent();
         String listKey = intent.getStringExtra(INTENT_EXTRA_LIST_KEY);
-        assert listKey !=null;
+        assert listKey != null;
         list = Store.getList(listKey);
 
         setContentView(R.layout.activity_items);
@@ -64,7 +64,7 @@ public class ItemsActivity extends AppCompatActivity implements ChildEventListen
         recyclerView.setLayoutManager(layoutManager);
         layoutManager.setRecycleChildrenOnDetach(true);
 
-        adapter = new ItemsRecyclerViewAdapter(getFragmentManager());
+        adapter = new ItemsRecyclerViewAdapter();
         recyclerView.setAdapter(adapter);
 
         FloatingActionButton addButton = (FloatingActionButton) findViewById(R.id.add_button);

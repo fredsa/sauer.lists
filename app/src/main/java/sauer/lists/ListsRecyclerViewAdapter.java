@@ -16,7 +16,7 @@ import java.util.HashMap;
 
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
-public class ListsRecyclerViewAdapter extends RecyclerView.Adapter<ListsRecyclerViewAdapter.ViewHolder> {
+class ListsRecyclerViewAdapter extends RecyclerView.Adapter<ListsRecyclerViewAdapter.ViewHolder> {
 
     static final String TAG = ListsRecyclerViewAdapter.class.getName();
 
@@ -24,21 +24,21 @@ public class ListsRecyclerViewAdapter extends RecyclerView.Adapter<ListsRecycler
     private RecyclerView recyclerView;
     private ArrayList<DatabaseReference> lists = new ArrayList<>();
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    static class ViewHolder extends RecyclerView.ViewHolder {
         public View view;
-        public TextView listNameTextView;
-        public TextView itemCountTextView;
-        public DatabaseReference list;
-        public ValueEventListener valueEventListener;
+        TextView listNameTextView;
+        TextView itemCountTextView;
+        DatabaseReference list;
+        ValueEventListener valueEventListener;
 
-        public ViewHolder(View view) {
+        ViewHolder(View view) {
             super(view);
             this.view = view;
             this.listNameTextView = (TextView) view.findViewById(R.id.list_name);
             this.itemCountTextView = (TextView) view.findViewById(R.id.item_count);
         }
 
-        public void cleanUpListeners() {
+        void cleanUpListeners() {
             if (valueEventListener != null) {
                 list.removeEventListener(valueEventListener);
                 valueEventListener = null;
@@ -58,7 +58,7 @@ public class ListsRecyclerViewAdapter extends RecyclerView.Adapter<ListsRecycler
         this.recyclerView = null;
     }
 
-    public ListsRecyclerViewAdapter(DatabaseReference listKeys) {
+    ListsRecyclerViewAdapter(DatabaseReference listKeys) {
         this.listKeys = listKeys;
     }
 
@@ -68,12 +68,12 @@ public class ListsRecyclerViewAdapter extends RecyclerView.Adapter<ListsRecycler
         holder.cleanUpListeners();
     }
 
-    public void add(DatabaseReference list) {
+    void add(DatabaseReference list) {
         lists.add(list);
         notifyDataSetChanged();
     }
 
-    public void remove(DatabaseReference list) {
+    void remove(DatabaseReference list) {
         lists.remove(list);
         notifyDataSetChanged();
     }
@@ -82,17 +82,16 @@ public class ListsRecyclerViewAdapter extends RecyclerView.Adapter<ListsRecycler
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.list, parent, false);
-        ViewHolder viewHolder = new ViewHolder(view);
-        return viewHolder;
+        return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, final int position) {
+    public void onBindViewHolder(final ViewHolder holder, int currentPosition) {
         assert holder.valueEventListener == null;
         holder.listNameTextView.setVisibility(View.INVISIBLE);
         holder.itemCountTextView.setVisibility(View.INVISIBLE);
 
-        holder.list = lists.get(position);
+        holder.list = lists.get(currentPosition);
         holder.valueEventListener = new LoggingValueEventListener(recyclerView.getContext(), holder.list) {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -113,7 +112,7 @@ public class ListsRecyclerViewAdapter extends RecyclerView.Adapter<ListsRecycler
             public void onClick(View view) {
                 DatabaseReference list = lists.get(holder.getAdapterPosition());
                 Intent intent = new Intent(recyclerView.getContext(), ItemsActivity.class);
-                intent.putExtra(ItemsActivity.INTENT_EXTRA_LIST_KEY, list.getKey().toString());
+                intent.putExtra(ItemsActivity.INTENT_EXTRA_LIST_KEY, list.getKey());
                 intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
                 recyclerView.getContext().startActivity(intent);
             }
@@ -123,7 +122,7 @@ public class ListsRecyclerViewAdapter extends RecyclerView.Adapter<ListsRecycler
             @Override
             public boolean onLongClick(View view) {
                 holder.cleanUpListeners();
-                final DatabaseReference list = lists.get(position);
+                final DatabaseReference list = lists.get(holder.getAdapterPosition());
                 list.removeValue();
                 listKeys.child(list.getKey()).removeValue();
                 return true;

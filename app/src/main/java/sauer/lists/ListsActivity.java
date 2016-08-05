@@ -68,7 +68,7 @@ public class ListsActivity extends AppCompatActivity implements ChildEventListen
 
     private void showLoadingSpinner() {
         final TextView statusTextView = (TextView) findViewById(R.id.status_text);
-        statusTextView.setText("Loading…");
+        statusTextView.setText(getString(R.string.loading));
 
         listKeys.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
