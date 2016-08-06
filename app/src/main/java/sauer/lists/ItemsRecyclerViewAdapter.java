@@ -94,8 +94,7 @@ class ItemsRecyclerViewAdapter extends RecyclerView.Adapter<ItemsRecyclerViewAda
             public void onClick(View view) {
                 DatabaseReference item = items.get(holder.getAdapterPosition());
                 EditNameDialogFragment dialog = new EditNameDialogFragment();
-                FragmentManager fragmentManager = ((Activity) recyclerView.getContext()).getFragmentManager();
-                dialog.show(fragmentManager, item, recyclerView.getContext().getString(R.string.item_name));
+                dialog.show(getFragmentManager(), item, recyclerView.getContext().getString(R.string.item_name));
             }
         });
 
@@ -108,6 +107,10 @@ class ItemsRecyclerViewAdapter extends RecyclerView.Adapter<ItemsRecyclerViewAda
                 return true;
             }
         });
+    }
+
+    private FragmentManager getFragmentManager() {
+        return ((ItemsActivity) recyclerView.getContext()).getFragmentManager();
     }
 
     @Override
