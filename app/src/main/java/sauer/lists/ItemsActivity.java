@@ -75,20 +75,16 @@ public class ItemsActivity extends AppCompatActivity implements ChildEventListen
                 dialog.show(getFragmentManager(), list.child("items").push(), getString(R.string.item_name));
             }
         });
-    }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        list.removeEventListener(valueEventListener);
-        list.child("items").removeEventListener(this);
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
         list.addValueEventListener(valueEventListener);
         list.child("items").addChildEventListener(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        list.removeEventListener(valueEventListener);
+        list.child("items").removeEventListener(this);
     }
 
     @Override

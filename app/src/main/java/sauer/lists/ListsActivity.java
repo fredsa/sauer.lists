@@ -62,8 +62,17 @@ public class ListsActivity extends AppCompatActivity implements ChildEventListen
             }
         };
 
-        showLoadingSpinner();
+        listKeys.addValueEventListener(valueEventListener);
+        listKeys.addChildEventListener(this);
 
+        showLoadingSpinner();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        listKeys.removeEventListener(valueEventListener);
+        listKeys.removeEventListener(this);
     }
 
     private void showLoadingSpinner() {
@@ -89,20 +98,6 @@ public class ListsActivity extends AppCompatActivity implements ChildEventListen
                 findViewById(R.id.progress_bar).setVisibility(View.GONE);
             }
         });
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        listKeys.removeEventListener(valueEventListener);
-        listKeys.removeEventListener(this);
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        listKeys.addValueEventListener(valueEventListener);
-        listKeys.addChildEventListener(this);
     }
 
     private DatabaseReference makeList() {
