@@ -11,6 +11,12 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.firebase.ui.auth.AuthUI;
+import com.google.android.gms.appinvite.AppInvite;
+import com.google.android.gms.appinvite.AppInviteInvitationResult;
+import com.google.android.gms.appinvite.AppInviteReferral;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -26,6 +32,7 @@ public class LoginActivity extends AppCompatActivity {
     private FirebaseAuth auth;
 
     private static boolean firstRun = true;
+    private GoogleApiClient googleApiClient;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -67,6 +74,19 @@ public class LoginActivity extends AppCompatActivity {
                 updateButtonsStates();
             }
         });
+
+        GoogleApiClient.OnConnectionFailedListener connectionFailedListener =
+                new GoogleApiClient.OnConnectionFailedListener() {
+                    @Override
+                    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+                        Log.w(TAG, "onConnectionFailed() " + connectionResult);
+                    }
+                };
+
+        googleApiClient = new GoogleApiClient.Builder(this)
+                .addApi(AppInvite.API)
+                .enableAutoManage(this, connectionFailedListener)
+                .build();
     }
 
     private void updateButtonsStates() {
@@ -126,11 +146,38 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void startListsActivity() {
-
+        checkForAppInvite();
         Intent intent = new Intent(this, ListsActivity.class);
         intent.putExtra("email", auth.getCurrentUser().getEmail());
         intent.putExtra("uid", auth.getCurrentUser().getUid());
         startActivity(intent);
+    }
+
+    private void checkForAppInvite() {
+        // Check for App Invite invitations and launch deep-link activity if possible.
+        // Requires that an Activity is registered in AndroidManifest.xml to handle
+        // deep-link URLs.
+        boolean autoLaunchDeepLink = true;
+        AppInvite.AppInviteApi.getInvitation(googleApiClient, this, autoLaunchDeepLink)
+                .setResultCallback(
+                        new ResultCallback<AppInviteInvitationResult>() {
+                            @Override
+                            public void onResult(AppInviteInvitationResult result) {
+                                Log.d(TAG, "getInvitation:onResult:" + result.getStatus());
+                                if (result.getStatus().isSuccess()) {
+                                    // Extract information from the intent
+                                    Intent intent = result.getInvitationIntent();
+                                    String deepLink = AppInviteReferral.getDeepLink(intent);
+                                    String invitationId = AppInviteReferral.getInvitationId(intent);
+
+                                    Log.d(TAG, "GOT INVITE: intent=" + intent + " deepLink=" + deepLink + " invitiationId=" + invitationId);
+                                    // Because autoLaunchDeepLink = true we don't have to do anything
+                                    // here, but we could set that to false and manually choose
+                                    // an Activity to launch to handle the deep link here.
+                                    // ...
+                                }
+                            }
+                        });
     }
 
     public void setStatus(String text) {

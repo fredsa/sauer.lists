@@ -55,6 +55,7 @@ public class ListsActivity extends AppCompatActivity implements ChildEventListen
             }
         });
 
+        findViewById(R.id.no_lists).setVisibility(View.GONE);
         valueEventListener = new LoggingValueEventListener(getApplicationContext(), listKeys) {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -136,7 +137,7 @@ public class ListsActivity extends AppCompatActivity implements ChildEventListen
     @Override
     public void onCancelled(DatabaseError databaseError) {
         String msg = getClass().getName() + " failed: " + databaseError.toString() + " details: " + databaseError.getDetails();
-        Log.d(TAG, msg, databaseError.toException());
+        Log.e(TAG, msg, databaseError.toException());
         Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
     }
 

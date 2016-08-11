@@ -5,8 +5,13 @@
     <string name="sign_in">Sign in</string>
     <string name="tag_line">Lists made simple.</string>
     <string name="sign_out">Sign out</string>
-    <string name="continue_as">Continue as %s</string>
+    <string name="continue_as">Continue as %1$s</string>
     <string name="loading">Loading…</string>
     <string name="empty_list">Empty list.</string>
     <string name="no_lists">You don\'t have any lists.</string>
+    <string name="invitation_deep_link">lists://share/%1$s/%2$s</string>
+    <string name="invitation_title">Share ‘%1$s’ list with…</string>
+    <string name="invitation_message">I\'d like to share my ‘%1$s’ list with you.</string>
+    <string name="invitation_subject">Invitation to share ‘%1$s’ list</string>
+    <string name="invitation_html_content">Follow &lt;a href="%%APPINVITE_LINK_PLACEHOLDER%%"&gt;this link&lt;/a&gt; to download the &lt;i&gt;Lists of Things&lt;/i&gt; app and start sharing my list:&lt;br&gt;&lt;br&gt;%%APPINVITE_LINK_PLACEHOLDER%%</string>
 </resources>

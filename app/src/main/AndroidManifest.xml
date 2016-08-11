@@ -10,7 +10,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".ListsActivity"
-            android:parentActivityName=".LoginActivity"/>
+            android:parentActivityName=".LoginActivity" />
         <activity
             android:name=".ItemsActivity"
             android:parentActivityName=".ListsActivity" />
@@ -22,7 +22,17 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <intent-filter android:label="intent_filter_title">
+                <action android:name="android.intent.action.VIEW" />
 
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <!-- Accepts URIs that begin with "lists://share” -->
+                <data
+                    android:host="share"
+                    android:scheme="lists:" />
+
+            </intent-filter>
         </activity>
     </application>
 
