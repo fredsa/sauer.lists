@@ -104,7 +104,7 @@ public class LoginActivity extends AppCompatActivity {
         if (isSignedIn) {
             setStatus("Signed in as " + auth.getCurrentUser().getEmail() + ".");
         } else {
-            setStatus("Please sign in.");
+            setStatus("Please sign-in.");
         }
 
         if (firstRun && isSignedIn) {
@@ -141,6 +141,8 @@ public class LoginActivity extends AppCompatActivity {
         if (requestCode == RC_SIGN_IN) {
             if (resultCode == RESULT_OK) {
                 startListsActivity();
+            } else {
+                setStatus("Please sign in.");
             }
         }
     }
