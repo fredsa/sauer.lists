@@ -27,10 +27,9 @@
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <!-- Accepts URIs that begin with "lists://share” -->
                 <data
-                    android:host="share"
-                    android:scheme="lists:" />
+                    android:host="sauer-lists.firebaseapp.com"
+                    android:scheme="https:" />
 
             </intent-filter>
         </activity>
