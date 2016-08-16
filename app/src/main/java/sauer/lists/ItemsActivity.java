@@ -7,12 +7,15 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.appinvite.AppInviteInvitation;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -23,7 +26,7 @@ public class ItemsActivity extends AppCompatActivity implements ChildEventListen
 
     private static final String TAG = ItemsActivity.class.getName();
 
-    private static final int REQUEST_INVITE = 42;
+    private static final int SEND_INVITE_RESULT = 42;
 
     static final String INTENT_EXTRA_LIST_KEY = "list_key";
 
@@ -43,6 +46,10 @@ public class ItemsActivity extends AppCompatActivity implements ChildEventListen
         list = Store.getList(listKey);
 
         setContentView(R.layout.activity_items);
+
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        setSupportActionBar(myToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         listNameTextView = (TextView) findViewById(R.id.list_name);
         emptyListTextView = (TextView) findViewById(R.id.empty_list);
@@ -81,17 +88,28 @@ public class ItemsActivity extends AppCompatActivity implements ChildEventListen
             }
         });
 
-        FloatingActionButton shareButton = (FloatingActionButton) findViewById(R.id.share_button);
-        shareButton.setVisibility(View.VISIBLE);
-        shareButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                sendInvite();
-            }
-        });
-
         list.addValueEventListener(valueEventListener);
         list.child("items").addChildEventListener(this);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.items_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Log.d(TAG, item.toString() + " " + item.getItemId());
+        switch (item.getItemId()) {
+            case R.id.menu_item_share:
+                sendInvite();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override
@@ -110,37 +128,32 @@ public class ItemsActivity extends AppCompatActivity implements ChildEventListen
         invite.setValue(ServerValue.TIMESTAMP);
         Log.d(TAG, "SENDING INVITE FOR " + list.getKey() + " with invite code " + invite.getKey());
 
-        Uri uri = Uri.parse(getString(R.string.invitation_deep_link, list.getKey(), invite.getKey()));
-        Log.d(TAG, "Sending invitation to deep link " + uri.toString());
-        Intent intent = new AppInviteInvitation.IntentBuilder(getString(R.string.invitation_title, listName))
-                .setMessage(getString(R.string.invitation_message, listName))
-                .setDeepLink(uri)
-                .setEmailSubject(getString(R.string.invitation_subject, listName))
-                .setEmailHtmlContent(getString(R.string.invitation_html_content))
-                .build();
-        startActivityForResult(intent, REQUEST_INVITE);
+        String shareDeepLink = getString(R.string.share_deep_link, list.getKey(), invite.getKey());
+        Uri uri = Uri.parse(getString(R.string.invitation_dynamic_link, shareDeepLink));
+        Log.d(TAG, "Sending invitation: share_deep_link=" + shareDeepLink + " invitation_dynamic_link=" + uri.toString());
+
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_SEND);
+        intent.setType("text/plain");
+        intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.invitation_message, listName, uri.toString()));
+        startActivityForResult(Intent.createChooser(intent, getString(R.string.invitation_chooser_title, listName)), SEND_INVITE_RESULT);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         Log.d(TAG, "onActivityResult(): requestCode=" + requestCode + ", resultCode=" + resultCode + " data=" + data);
-        if (requestCode == REQUEST_INVITE) {
+        if (requestCode == SEND_INVITE_RESULT) {
             switch (resultCode) {
                 case RESULT_OK:
-                    // Get the invitation IDs of all sent messages
-                    String[] ids = AppInviteInvitation.getInvitationIds(resultCode, data);
-                    for (String id : ids) {
-                        Log.d(TAG, "REQUEST_INVITE RESULT_OK: sent invitation " + id);
-                    }
+                    Log.d(TAG, "SEND_INVITE_RESULT RESULT_OK");
                     break;
                 case RESULT_CANCELED:
-                    // invitation cancelled
-                    Log.d(TAG, "REQUEST_INVITE RESULT_CANCELED");
+                    Log.d(TAG, "SEND_INVITE_RESULT RESULT_CANCELED");
 //                    Toast.makeText(getApplicationContext(), "Invitation canceled.", Toast.LENGTH_SHORT).show();
                     break;
                 default:
-                    String msg = "Request invite unhandled result code: " + resultCode;
+                    String msg = "SEND_INVITE_RESULT unhandled result code: " + resultCode;
                     Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
                     Log.e(TAG, msg);
             }
