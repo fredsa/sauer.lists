@@ -72,7 +72,7 @@ public class ListsActivity extends AppCompatActivity implements ChildEventListen
 
         SharedPreferences prefs = getSharedPreferences(Constants.SHARED_PREFERENCES_INVITES, MODE_PRIVATE);
         String deepLinkListKey = prefs.getString(Constants.LIST_KEY, null);
-        String deepLinkInviteCode = prefs.getString(Constants.INVITE_CODE, null);
+        //String deepLinkInviteCode = prefs.getString(Constants.INVITE_CODE, null);
         if (deepLinkListKey != null) {
             prefs.edit().remove(Constants.LIST_KEY).apply();
             Intent intent = new Intent(this, ItemsActivity.class);
