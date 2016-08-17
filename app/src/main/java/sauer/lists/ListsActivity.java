@@ -1,6 +1,7 @@
 package sauer.lists;
 
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -21,6 +22,7 @@ import com.google.firebase.database.ValueEventListener;
 public class ListsActivity extends AppCompatActivity implements ChildEventListener {
 
     private static final String TAG = ListsActivity.class.getName();
+    public static final String INTENT_EXTRA_DEEP_LINK_URI = "deep_link_uri";
 
     private ListsRecyclerViewAdapter adapter;
     private DatabaseReference listKeys;
@@ -31,6 +33,9 @@ public class ListsActivity extends AppCompatActivity implements ChildEventListen
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_lists);
+
+        String deepLinkUri = getIntent().getStringExtra(INTENT_EXTRA_DEEP_LINK_URI);
+        Log.d(TAG, "INTENT_EXTRA_DEEP_LINK_URI=" + deepLinkUri);
 
         String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         listKeys = Store.getUserListKeys(uid);
