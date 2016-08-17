@@ -37,6 +37,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate()");
+        FirebaseCrash.report(new Exception("Everything is OK."));
 
         deepLinkUri = getIntent().getData();
         Log.d(TAG, "deepLinkUri=" + deepLinkUri);
