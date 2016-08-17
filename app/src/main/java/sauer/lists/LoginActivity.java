@@ -150,7 +150,9 @@ public class LoginActivity extends AppCompatActivity {
 
     private void startListsActivity() {
         Intent intent = new Intent(this, ListsActivity.class);
-        intent.putExtra(ListsActivity.INTENT_EXTRA_DEEP_LINK_URI, deepLinkUri.toString());
+        if (deepLinkUri != null) {
+            intent.putExtra(ListsActivity.INTENT_EXTRA_DEEP_LINK_URI, deepLinkUri.toString());
+        }
         startActivity(intent);
     }
 
