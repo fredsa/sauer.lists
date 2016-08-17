@@ -11,7 +11,18 @@ android {
         versionCode 9
         versionName "1.0"
         setProperty("archivesBaseName", "$applicationId-$versionCode")
+
+        // Required for sourceCompatibility JavaVersion.VERSION_1_8
+        jackOptions {
+            enabled true
+        }
     }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
     buildTypes {
         release {
             minifyEnabled false
