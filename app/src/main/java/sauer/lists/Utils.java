@@ -1,5 +1,7 @@
 package sauer.lists;
 
+import android.content.SharedPreferences;
+
 import com.google.firebase.database.DataSnapshot;
 
 class Utils {
@@ -15,4 +17,5 @@ class Utils {
         Object value = dataSnapshot.child("name").getValue();
         return value == null ? defaultName : value.toString();
     }
+
 }

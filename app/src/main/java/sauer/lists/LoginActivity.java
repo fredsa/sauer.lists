@@ -12,12 +12,14 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.firebase.ui.auth.AuthUI;
-import com.google.android.gms.appinvite.AppInvite;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.crash.FirebaseCrash;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -31,7 +33,8 @@ public class LoginActivity extends AppCompatActivity {
     private FirebaseAuth auth;
 
     private static boolean firstRun = true;
-    private Uri deepLinkUri;
+    private String deepLinkListKey;
+    private String deepLinkInviteCode;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -39,10 +42,13 @@ public class LoginActivity extends AppCompatActivity {
         Log.d(TAG, "onCreate()");
         FirebaseCrash.report(new Exception("Everything is OK."));
 
-        deepLinkUri = getIntent().getData();
-        Log.d(TAG, "deepLinkUri=" + deepLinkUri);
-
         setContentView(R.layout.activity_login);
+
+        Uri deepLinkUri = getIntent().getData();
+        if (deepLinkUri != null) {
+            Log.d(TAG, "onCreate(): deepLinkUri=" + deepLinkUri);
+            processDeepLink(deepLinkUri.toString());
+        }
 
         statusTextView = (TextView) findViewById(R.id.status_text);
 
@@ -85,11 +91,35 @@ public class LoginActivity extends AppCompatActivity {
                         Log.w(TAG, "onConnectionFailed() " + connectionResult);
                     }
                 };
+    }
 
-        GoogleApiClient googleApiClient = new GoogleApiClient.Builder(this)
-                .addApi(AppInvite.API)
-                .enableAutoManage(this, connectionFailedListener)
-                .build();
+    private void processDeepLink(String deepLinkUri) {
+        Pattern pattern = Pattern.compile(getString(R.string.share_deep_link_regex));
+        Matcher matcher = pattern.matcher(deepLinkUri);
+        if (!matcher.matches()) {
+            FirebaseCrash.report(new Exception("Unable to parse deep link URL " + deepLinkUri));
+            return;
+        }
+        if (matcher.groupCount() != 2) {
+            FirebaseCrash.report(new Exception("Deep link URL unexpectedly matches " + matcher.groupCount() + " groups: " + deepLinkUri));
+            return;
+        }
+        deepLinkListKey = matcher.group(1);
+        deepLinkInviteCode = matcher.group(2);
+        if (deepLinkListKey != null) {
+            Log.d(TAG, "deepLinkListKey=" + deepLinkListKey);
+            getSharedPreferences(Constants.SHARED_PREFERENCES_INVITES, MODE_PRIVATE)
+                    .edit()
+                    .putString(Constants.LIST_KEY, deepLinkListKey)
+                    .apply();
+        }
+        if (deepLinkInviteCode != null) {
+            Log.d(TAG, "deepLinkInviteCode=" + deepLinkInviteCode);
+            getSharedPreferences(Constants.SHARED_PREFERENCES_INVITES, MODE_PRIVATE)
+                    .edit()
+                    .putString(Constants.INVITE_CODE, deepLinkInviteCode)
+                    .apply();
+        }
     }
 
     private void updateButtonsStates() {
@@ -152,9 +182,6 @@ public class LoginActivity extends AppCompatActivity {
 
     private void startListsActivity() {
         Intent intent = new Intent(this, ListsActivity.class);
-        if (deepLinkUri != null) {
-            intent.putExtra(ListsActivity.INTENT_EXTRA_DEEP_LINK_URI, deepLinkUri.toString());
-        }
         startActivity(intent);
     }
 

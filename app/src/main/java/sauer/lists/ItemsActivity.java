@@ -28,8 +28,6 @@ public class ItemsActivity extends AppCompatActivity implements ChildEventListen
 
     private static final int SEND_INVITE_RESULT = 42;
 
-    static final String INTENT_EXTRA_LIST_KEY = "list_key";
-
     private TextView emptyListTextView;
     private TextView listNameTextView;
     private ItemsRecyclerViewAdapter adapter;
@@ -41,7 +39,7 @@ public class ItemsActivity extends AppCompatActivity implements ChildEventListen
         super.onCreate(savedInstanceState);
 
         Intent intent = getIntent();
-        String listKey = intent.getStringExtra(INTENT_EXTRA_LIST_KEY);
+        String listKey = intent.getStringExtra(Constants.LIST_KEY);
         assert listKey != null;
         list = Store.getList(listKey);
 

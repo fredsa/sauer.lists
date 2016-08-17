@@ -112,7 +112,7 @@ class ListsRecyclerViewAdapter extends RecyclerView.Adapter<ListsRecyclerViewAda
             public void onClick(View view) {
                 DatabaseReference list = lists.get(holder.getAdapterPosition());
                 Intent intent = new Intent(recyclerView.getContext(), ItemsActivity.class);
-                intent.putExtra(ItemsActivity.INTENT_EXTRA_LIST_KEY, list.getKey());
+                intent.putExtra(Constants.LIST_KEY, list.getKey());
                 intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
                 recyclerView.getContext().startActivity(intent);
             }

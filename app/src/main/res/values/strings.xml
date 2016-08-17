@@ -10,6 +10,7 @@
     <string name="empty_list">Empty list.</string>
     <string name="no_lists">You don\'t have any lists.</string>
     <string name="share_deep_link">https://sauer-lists.firebaseapp.com/%1$s/%2$s</string>
+    <string name="share_deep_link_regex">https://sauer-lists.firebaseapp.com/([^/]+)/([^/]+)</string>
     <string name="invitation_dynamic_link">https://jr8jd.app.goo.gl/?link=%1$s&amp;apn=sauer.lists&amp;amv=7</string>
     <string name="invitation_chooser_title">Share ‘%1$s’ list…</string>
     <string name="invitation_message">I\'d like to share my ‘%1$s’ list with you:\n\n%2$s</string>
