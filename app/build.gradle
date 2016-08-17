@@ -8,8 +8,8 @@ android {
         applicationId "sauer.lists"
         minSdkVersion 23
         targetSdkVersion 24
-        versionCode 9
-        versionName "1.0"
+        versionCode 10
+        versionName "1.1"
         setProperty("archivesBaseName", "$applicationId-$versionCode")
 
         // Required for sourceCompatibility JavaVersion.VERSION_1_8
