@@ -1,6 +1,5 @@
 package sauer.lists;
 
-import android.app.Activity;
 import android.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;

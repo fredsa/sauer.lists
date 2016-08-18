@@ -1,7 +1,5 @@
 package sauer.lists;
 
-import android.content.SharedPreferences;
-
 import com.google.firebase.database.DataSnapshot;
 
 class Utils {

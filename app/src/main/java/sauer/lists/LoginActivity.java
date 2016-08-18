@@ -40,7 +40,6 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate()");
-        FirebaseCrash.report(new Exception("Everything is OK."));
 
         setContentView(R.layout.activity_login);
 
