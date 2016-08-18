@@ -32,7 +32,7 @@ public class Store {
         return lists.child(listKey);
     }
 
-    public static DatabaseReference getUserListKeys(String uid) {
+    public static DatabaseReference getUserAcls(String uid) {
         init();
         return acls.child(uid);
     }

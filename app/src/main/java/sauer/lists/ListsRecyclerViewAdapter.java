@@ -20,7 +20,7 @@ class ListsRecyclerViewAdapter extends RecyclerView.Adapter<ListsRecyclerViewAda
 
     static final String TAG = ListsRecyclerViewAdapter.class.getName();
 
-    private DatabaseReference listKeys;
+    private DatabaseReference userAcls;
     private RecyclerView recyclerView;
     private ArrayList<DatabaseReference> lists = new ArrayList<>();
 
@@ -58,8 +58,8 @@ class ListsRecyclerViewAdapter extends RecyclerView.Adapter<ListsRecyclerViewAda
         this.recyclerView = null;
     }
 
-    ListsRecyclerViewAdapter(DatabaseReference listKeys) {
-        this.listKeys = listKeys;
+    ListsRecyclerViewAdapter(DatabaseReference userAcls) {
+        this.userAcls = userAcls;
     }
 
     @Override
@@ -124,7 +124,7 @@ class ListsRecyclerViewAdapter extends RecyclerView.Adapter<ListsRecyclerViewAda
                 holder.cleanUpListeners();
                 final DatabaseReference list = lists.get(holder.getAdapterPosition());
                 list.removeValue();
-                listKeys.child(list.getKey()).removeValue();
+                userAcls.child(list.getKey()).removeValue();
                 return true;
             }
         });

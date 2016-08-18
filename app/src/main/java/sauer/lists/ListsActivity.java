@@ -25,7 +25,7 @@ public class ListsActivity extends AppCompatActivity implements ChildEventListen
     private static final String TAG = ListsActivity.class.getName();
 
     private ListsRecyclerViewAdapter adapter;
-    private DatabaseReference listKeys;
+    private DatabaseReference userAcls;
     private ValueEventListener valueEventListener;
 
     @Override
@@ -35,7 +35,7 @@ public class ListsActivity extends AppCompatActivity implements ChildEventListen
         setContentView(R.layout.activity_lists);
 
         String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        listKeys = Store.getUserListKeys(uid);
+        userAcls = Store.getUserAcls(uid);
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.list_view);
 
@@ -43,7 +43,7 @@ public class ListsActivity extends AppCompatActivity implements ChildEventListen
         recyclerView.setLayoutManager(layoutManager);
         layoutManager.setRecycleChildrenOnDetach(true);
 
-        adapter = new ListsRecyclerViewAdapter(listKeys);
+        adapter = new ListsRecyclerViewAdapter(userAcls);
         recyclerView.setAdapter(adapter);
 
         FloatingActionButton addButton = (FloatingActionButton) findViewById(R.id.add_button);
@@ -58,23 +58,28 @@ public class ListsActivity extends AppCompatActivity implements ChildEventListen
         });
 
         findViewById(R.id.no_lists).setVisibility(View.GONE);
-        valueEventListener = new LoggingValueEventListener(getApplicationContext(), listKeys) {
+        valueEventListener = new LoggingValueEventListener(getApplicationContext(), userAcls) {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 findViewById(R.id.no_lists).setVisibility(dataSnapshot.exists() ? View.GONE : View.VISIBLE);
             }
         };
 
-        listKeys.addValueEventListener(valueEventListener);
-        listKeys.addChildEventListener(this);
+        userAcls.addValueEventListener(valueEventListener);
+        userAcls.addChildEventListener(this);
 
         showLoadingSpinner();
 
         SharedPreferences prefs = getSharedPreferences(Constants.SHARED_PREFERENCES_INVITES, MODE_PRIVATE);
         String deepLinkListKey = prefs.getString(Constants.LIST_KEY, null);
-        //String deepLinkInviteCode = prefs.getString(Constants.INVITE_CODE, null);
         if (deepLinkListKey != null) {
-            prefs.edit().remove(Constants.LIST_KEY).apply();
+            String deepLinkInviteCode = prefs.getString(Constants.INVITE_CODE, null);
+            if (deepLinkInviteCode != null) {
+                userAcls.child(deepLinkListKey).setValue(deepLinkInviteCode);
+                userAcls.child(deepLinkListKey).setValue("EDITOR");
+                Store.getList(deepLinkListKey).child("invites").child(deepLinkInviteCode).removeValue();
+            }
+            prefs.edit().remove(Constants.LIST_KEY).remove(Constants.INVITE_CODE).apply();
             Intent intent = new Intent(this, ItemsActivity.class);
             intent.putExtra(Constants.LIST_KEY, deepLinkListKey);
             startActivity(intent);
@@ -84,15 +89,15 @@ public class ListsActivity extends AppCompatActivity implements ChildEventListen
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        listKeys.removeEventListener(valueEventListener);
-        listKeys.removeEventListener(this);
+        userAcls.removeEventListener(valueEventListener);
+        userAcls.removeEventListener(this);
     }
 
     private void showLoadingSpinner() {
         final TextView statusTextView = (TextView) findViewById(R.id.status_text);
         statusTextView.setText(getString(R.string.loading));
 
-        listKeys.addListenerForSingleValueEvent(new ValueEventListener() {
+        userAcls.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 String statusText = "Successfully retrieved " + dataSnapshot.getChildrenCount() + " references to my lists.";
@@ -114,7 +119,7 @@ public class ListsActivity extends AppCompatActivity implements ChildEventListen
     }
 
     private DatabaseReference makeList() {
-        DatabaseReference listPointer = listKeys.push();
+        DatabaseReference listPointer = userAcls.push();
         listPointer.setValue("OWNER");
 
         return Store.getList(listPointer.getKey());

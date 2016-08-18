@@ -1,0 +1,21 @@
+{
+  "rules": {
+    "acls": {
+      "$uid": {
+        ".read": "$uid === auth.uid",
+        "$ulist_id": {
+          ".write": "$uid === auth.uid && (!root.child('lists').child($ulist_id).exists() || root.child('lists').child($ulist_id).child('invites').child(newData.val()).exists() || (root.child('lists').child($ulist_id).child('invites').child(data.val()).exists() && newData.val() === 'EDITOR'))"
+        }
+      }
+    },
+    "lists": {
+      "$list_id": {
+        ".read": "root.child('acls').child(auth.uid).child($list_id).val() === 'OWNER' || root.child('acls').child(auth.uid).child($list_id).val() === 'EDITOR'",
+        ".write": "root.child('acls').child(auth.uid).child($list_id).val() === 'OWNER' || root.child('acls').child(auth.uid).child($list_id).val() === 'EDITOR'",
+        ".validate": "newData.exists()",
+        "items": {},
+        "invites": {}
+      }
+    }
+  }
+}
