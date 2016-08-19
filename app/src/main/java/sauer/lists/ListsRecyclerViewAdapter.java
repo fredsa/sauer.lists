@@ -2,6 +2,7 @@ package sauer.lists;
 
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -92,9 +93,11 @@ class ListsRecyclerViewAdapter extends RecyclerView.Adapter<ListsRecyclerViewAda
         holder.itemCountTextView.setVisibility(View.INVISIBLE);
 
         holder.list = lists.get(currentPosition);
+        Log.d(TAG, "ADDING ValueEventListener: " + holder.list.getKey());
         holder.valueEventListener = new LoggingValueEventListener(recyclerView.getContext(), holder.list) {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.d(TAG, "FIRING ValueEventListener: " + holder.list.getKey() + " -> " + dataSnapshot.getValue());
                 holder.listNameTextView.setVisibility(View.VISIBLE);
                 holder.listNameTextView.setText(Utils.GetListNameFromSnapshot(dataSnapshot));
 
