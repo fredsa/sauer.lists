@@ -34,7 +34,7 @@ dependencies {
 
     // See Compatibility with Firebase / Google Play Services Libraries
     // https://github.com/firebase/FirebaseUI-Android
-    compile 'com.firebaseui:firebase-ui-auth:0.4.4'
+    compile 'com.firebaseui:firebase-ui-auth:0.4.3'
     compile 'com.google.firebase:firebase-database:9.4.0'
     compile 'com.google.firebase:firebase-invites:9.4.0'
     compile 'com.google.firebase:firebase-crash:9.4.0'
