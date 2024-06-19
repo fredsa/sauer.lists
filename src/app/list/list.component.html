@@ -1,5 +1,10 @@
-{{list}}
+{{list.name}}
 <mat-list>
-    <mat-list-item>item</mat-list-item>
-    <mat-list-item>item</mat-list-item>
+    <ol>
+        @for (item of list.items; track item) {
+        <li>
+            <mat-list-item>{{item}}</mat-list-item>
+        </li>
+        }
+    </ol>
 </mat-list>

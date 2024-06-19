@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { MatList, MatListItem } from '@angular/material/list';
+import { List } from '../backend.service';
 
 @Component({
   selector: 'app-list',
@@ -13,5 +14,5 @@ import { MatList, MatListItem } from '@angular/material/list';
 })
 export class ListComponent {
   @Input()
-  list = '';
+  list!: List;
 }

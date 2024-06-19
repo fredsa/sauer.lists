@@ -1,5 +1,10 @@
 import { Injectable } from '@angular/core';
 
+export interface List {
+  name: string,
+  items?: string[],
+};
+
 @Injectable({
   providedIn: 'root'
 })
@@ -7,9 +12,16 @@ export class BackendService {
 
   constructor() { }
 
-  lists: string[] = ['groceries'];
+  lists: List[] = [
+    {
+      name: 'Groceries',
+      items: ['Chips', 'Salsa',]
+    }
+  ];
 
   createList(listName: string) {
-    this.lists.push(listName);
+    this.lists.push({
+      name: listName,
+    });
   }
 }
