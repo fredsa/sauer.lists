@@ -1,4 +1,36 @@
-/* You can add global styles to this file, and also import other style files */
+@use '@angular/material' as mat;
+@use './mytheme';
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+@include mat.core();
+
+html {
+    // Apply the dark theme by default.
+    @include mat.core-theme(mytheme.$dark-theme);
+    @include mat.button-theme(mytheme.$dark-theme);
+    
+    // Apply the light theme only when the user prefers light themes.
+    @media (prefers-color-scheme: light) {
+        // Use the `-color` mixins to only apply color styles without reapplying
+        // the same typography and density styles.
+        @include mat.core-color(mytheme.$light-theme);
+        @include mat.button-color(mytheme.$light-theme);
+    }
+}
+
+html,
+body {
+    height: 100%;
+    @media (prefers-color-scheme: light) {
+        background-color: #fff;
+        color: #000;
+    }
+    @media (prefers-color-scheme: dark) {
+        background-color: #000;
+        color: #fff;
+    }
+}
+
+body {
+    margin: 0;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+}
