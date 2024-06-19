@@ -1,0 +1,13 @@
+<h2 mat-dialog-title>New list</h2>
+<mat-dialog-content>
+    <p>What should we call your new list?</p>
+    <mat-form-field>
+        <mat-label>List name</mat-label>
+        <input matInput [(ngModel)]="listName" maxlength="50" />
+    </mat-form-field>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+    <button mat-raised-button (click)="cancel()">Cancel</button>
+    <button mat-raised-button [mat-dialog-close]="listName">Save</button>
+</mat-dialog-actions>
