@@ -6,4 +6,7 @@
 
     <button mat-raised-button (click)="openDialog()">New list</button>
 
+    @for(list of backend.lists; track list) {
+    <app-list [list]="list"></app-list>
+    }
 </div>

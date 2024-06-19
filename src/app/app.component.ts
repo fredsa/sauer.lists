@@ -3,6 +3,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { RouterOutlet } from '@angular/router';
 import { NewListDialogComponent } from './new-list-dialog/new-list-dialog.component';
+import { BackendService } from './backend.service';
+import { ListComponent } from './list/list.component';
 
 @Component({
   selector: 'app-root',
@@ -10,6 +12,7 @@ import { NewListDialogComponent } from './new-list-dialog/new-list-dialog.compon
   imports: [
     RouterOutlet,
     MatButtonModule,
+    ListComponent,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
@@ -17,6 +20,10 @@ import { NewListDialogComponent } from './new-list-dialog/new-list-dialog.compon
 export class AppComponent {
 
   readonly dialog = inject(MatDialog);
+
+  constructor(
+    public backend: BackendService,
+  ) { }
 
   openDialog(): void {
     const dialogRef = this.dialog.open(NewListDialogComponent, {
@@ -29,7 +36,7 @@ export class AppComponent {
         return;
       }
 
-      // TODO: Create list.
+      this.backend.createList(result);
     });
   }
 }
