@@ -6,7 +6,6 @@ import { MatFormFieldModule, MatLabel } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 
 export interface NewListDialogData {
-  listName: string;
 }
 
 @Component({
@@ -30,13 +29,6 @@ export interface NewListDialogData {
 export class NewListDialogComponent {
   readonly dialogRef = inject(MatDialogRef<NewListDialogComponent>);
   readonly data = inject<NewListDialogData>(MAT_DIALOG_DATA);
-  readonly listName = model(this.data.listName);
-
-  cancel() {
-    this.dialogRef.close();
-  }
-
-  save() {
-  }
+  readonly listName = model();
 
 }

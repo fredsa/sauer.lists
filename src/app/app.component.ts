@@ -10,24 +10,26 @@ import { NewListDialogComponent } from './new-list-dialog/new-list-dialog.compon
   imports: [
     RouterOutlet,
     MatButtonModule,
-    ],
+  ],
   templateUrl: './app.component.html',
-  styleUrl:  './app.component.scss',
+  styleUrl: './app.component.scss',
 })
 export class AppComponent {
 
   readonly dialog = inject(MatDialog);
-  readonly listName = signal('');
 
   openDialog(): void {
     const dialogRef = this.dialog.open(NewListDialogComponent, {
-      data: {listName: this.listName()},
+      data: {},
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed', result());
-      if (result !== undefined) {
-        this.listName.set(result);
+      console.log('The dialog was closed', result);
+      if (result == undefined) {
+        return;
       }
+
+      // TODO: Create list.
     });
-  }}
+  }
+}
