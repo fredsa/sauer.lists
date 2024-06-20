@@ -5,6 +5,7 @@ import { RouterOutlet } from '@angular/router';
 import { NewListDialogComponent } from './new-list-dialog/new-list-dialog.component';
 import { BackendService } from './backend.service';
 import { ListComponent } from './list/list.component';
+import { DivConsoleComponent } from './div-console/div-console.component';
 
 @Component({
   selector: 'app-root',
@@ -13,6 +14,7 @@ import { ListComponent } from './list/list.component';
     RouterOutlet,
     MatButtonModule,
     ListComponent,
+    DivConsoleComponent,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
