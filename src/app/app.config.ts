@@ -17,7 +17,8 @@ export const appConfig: ApplicationConfig = {
     "appId": "1:460983314604:web:808b1007204e4c2ea4d709",
     "databaseURL": "https://sauer-lists.firebaseio.com",
     "storageBucket": "sauer-lists.appspot.com",
-    "locationId": "us-central",
+    // https://github.com/angular/angularfire/issues/3452
+    // "locationId": "us-central",
     "apiKey": "AIzaSyDsokPvdQq8v1w6qIaRITDPg82QIfgNIiE",
     "authDomain": "sauer-lists.firebaseapp.com",
     "messagingSenderId": "460983314604",
