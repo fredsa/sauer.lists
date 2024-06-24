@@ -1,18 +1,27 @@
 import { Component, Input } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
 import { MatList, MatListItem } from '@angular/material/list';
-import { List } from '../backend.service';
+import { BackendService, ListEntity } from '../backend.service';
 
 @Component({
   selector: 'app-list',
   standalone: true,
   imports: [
-    MatList,
-    MatListItem,
+    MatList, MatListItem,
+    MatCardModule,
+    MatButtonModule,
   ],
   templateUrl: './list.component.html',
   styleUrl: './list.component.scss'
 })
 export class ListComponent {
+
+  constructor(
+    public backend: BackendService,
+  ) { }
+
   @Input()
-  list!: List;
+  list!: ListEntity;
+
 }

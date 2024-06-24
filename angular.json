@@ -56,8 +56,7 @@
               }
             ],
             "styles": [
-              "src/styles.scss",
-              "src/mytheme.scss"
+              "src/styles.scss"
             ],
             "scripts": []
           },

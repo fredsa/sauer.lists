@@ -6,9 +6,12 @@
 
     <router-outlet />
 
+    <app-sign-in />
+
     <button mat-raised-button (click)="openDialog()">New list</button>
 
-    @for(list of backend.lists; track list) {
+    @for(list of backend.lists; track list.id) {
     <app-list [list]="list"></app-list>
     }
+
 </div>

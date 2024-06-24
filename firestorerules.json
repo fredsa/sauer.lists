@@ -1,0 +1,20 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /users/{userId} {
+      // Registered users can read and update themselves.
+      allow read, update: if request.auth != null
+        && request.auth.uid == userId;
+    }
+    match /lists/{list} {
+      // Registered users can create new lists.
+    	allow create: if request.auth != null
+        && exists(/databases/$(database)/documents/users/$(request.auth.uid));
+			
+      // Users can access, modify, delete their lists.
+      allow list, read, update, delete: if request.auth != null
+        && request.auth.uid in resource.data.users;
+    }
+  }
+}

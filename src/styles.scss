@@ -6,24 +6,34 @@
 html {
     // Apply the dark theme by default.
     @include mat.core-theme(mytheme.$dark-theme);
-    @include mat.button-theme(mytheme.$dark-theme);
-    
+
+    // TODO: Replace all-component-* with just the components used.
+    // @include mat.button-theme(mytheme.$dark-theme);
+    // @include mat.card-theme(mytheme.$dark-theme);
+    @include mat.all-component-themes(mytheme.$dark-theme);
+
     // Apply the light theme only when the user prefers light themes.
     @media (prefers-color-scheme: light) {
         // Use the `-color` mixins to only apply color styles without reapplying
         // the same typography and density styles.
         @include mat.core-color(mytheme.$light-theme);
-        @include mat.button-color(mytheme.$light-theme);
+
+        // TODO: Replace all-component-* with just the components used.
+        // @include mat.button-color(mytheme.$light-theme);
+        // @include mat.card-color(mytheme.$light-theme);
+        @include mat.all-component-colors(mytheme.$light-theme);
     }
 }
 
 html,
 body {
     height: 100%;
+
     @media (prefers-color-scheme: light) {
         background-color: #fff;
         color: #000;
     }
+
     @media (prefers-color-scheme: dark) {
         background-color: #000;
         color: #fff;

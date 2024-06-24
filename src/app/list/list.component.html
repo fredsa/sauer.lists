@@ -1,10 +1,21 @@
-{{list.name}}
-<mat-list>
-    <ol>
-        @for (item of list.items; track item) {
-        <li>
-            <mat-list-item>{{item}}</mat-list-item>
-        </li>
-        }
-    </ol>
-</mat-list>
+<mat-card appearance="outlined">
+    <mat-card-header>
+        <mat-card-title>
+            {{list.name}} — <code>{{list.id}}</code>
+        </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+        <mat-list>
+            <ol>
+                @for (item of list.items; track item) {
+                <li>
+                    <mat-list-item>{{item}}</mat-list-item>
+                </li>
+                }
+            </ol>
+        </mat-list>
+    </mat-card-content>
+    <mat-card-actions>
+        <button mat-raised-button (click)="backend.deleteList(list.id)">Delete</button>
+    </mat-card-actions>
+</mat-card>
