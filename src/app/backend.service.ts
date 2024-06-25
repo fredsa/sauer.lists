@@ -1,12 +1,7 @@
 import { Injectable, effect } from '@angular/core';
-import { CollectionReference, DocumentData, DocumentReference, Firestore, QueryDocumentSnapshot, collection, collectionSnapshots, deleteDoc, doc, query, setDoc, where } from '@angular/fire/firestore';
+import { DocumentData, DocumentReference, Firestore, QueryDocumentSnapshot, SnapshotOptions, collection, collectionSnapshots, deleteDoc, doc, query, setDoc, where } from '@angular/fire/firestore';
 import { Subscription } from 'rxjs';
 import { SigninService } from './signin.service';
-
-export interface UserEntity {
-  id: string,
-  lists: string[];
-}
 
 export interface ListEntity {
   id: string,
@@ -14,6 +9,29 @@ export interface ListEntity {
   name: string,
   items?: string[],
   users: string[],
+};
+
+const listConverter = {
+  toFirestore(list: ListEntity): DocumentData {
+    return {
+      name: list.name,
+      users: list.users,
+      items: list.items || [],
+    };
+  },
+  fromFirestore(
+    snapshot: QueryDocumentSnapshot,
+    options: SnapshotOptions
+  ): ListEntity {
+    const data = snapshot.data(options)!;
+    const castdata = data as Partial<ListEntity>
+    return <ListEntity>{
+      id: snapshot.id,
+      name: castdata.name,
+      users: castdata.users,
+      items: castdata.items,
+    };
+  }
 };
 
 @Injectable({
@@ -24,8 +42,6 @@ export class BackendService {
   lists!: ListEntity[];
 
   listsSubscription: Subscription | undefined;
-
-  listsCollection = collection(this.firestore, 'lists');
 
   constructor(
     private signin: SigninService,
@@ -42,25 +58,22 @@ export class BackendService {
     });
   }
 
+  listsCollection = collection(this.firestore, 'lists')
+    .withConverter(listConverter);
+
   subscribeToLists(uid: string | undefined) {
     if (!uid) {
-      console.log('collection not ready yet');
+      console.log('listsCollection not ready yet');
       this.lists = [];
       return;
     }
 
-    console.log('collection… ready, uid is', uid);
+    console.log('listsCollection ready, uid is', uid);
     const q = query(this.listsCollection, where("users", "array-contains", uid));
     const snapshots = collectionSnapshots(q);
     return snapshots.subscribe((snaps: QueryDocumentSnapshot[]) => {
-      this.lists = snaps
-        .map(snap => <ListEntity>{
-          id: snap.id,
-          ref: snap.ref,
-          // path: snap.ref.path,
-          //...snap.metadata,
-          ...snap.data(),
-        });
+      // Uses converter.
+      this.lists = snaps.map(snap => snap.data() as ListEntity);
     });
   }
 
