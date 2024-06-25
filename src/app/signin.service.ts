@@ -66,6 +66,8 @@ export class SigninService implements OnDestroy {
         photoURL: user.photoURL,
       });
 
+    }, (err: any) => {
+      log.error("user subscription error", err);
     });
   }
 

@@ -1,6 +1,7 @@
 import { Injectable, effect } from '@angular/core';
 import { DocumentData, DocumentReference, Firestore, QueryDocumentSnapshot, SnapshotOptions, collection, collectionSnapshots, deleteDoc, doc, query, setDoc, where } from '@angular/fire/firestore';
 import { Subscription } from 'rxjs';
+import { LogService } from './log.service';
 import { SigninService } from './signin.service';
 
 export interface ListEntity {
@@ -44,6 +45,7 @@ export class BackendService {
   listsSubscription: Subscription | undefined;
 
   constructor(
+    private log: LogService,
     private signin: SigninService,
     private firestore: Firestore,
   ) {
@@ -74,6 +76,8 @@ export class BackendService {
     return snapshots.subscribe((snaps: QueryDocumentSnapshot[]) => {
       // Uses converter.
       this.lists = snaps.map(snap => snap.data() as ListEntity);
+    }, (err: any) => {
+      this.log.error("list subscription error", err);
     });
   }
 
