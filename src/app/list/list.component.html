@@ -6,6 +6,13 @@
         </mat-card-title>
     </mat-card-header>
     <mat-card-content>
+        <!-- <form #myform>
+            <mat-form-field>
+                <mat-icon matPrefix>add</mat-icon>
+                <input matInput name="newItem" [(ngModel)]="newItem" maxlength="50" autocomplete="off" />
+            </mat-form-field>
+        </form> -->
+        <button mat-raised-button extended (click)="addItem()"><mat-icon>add</mat-icon>Add item</button>
         <mat-list>
             <ol>
                 @for (item of list.items; track item) {

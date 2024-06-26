@@ -13,15 +13,12 @@ export interface NewListDialogData {
   standalone: true,
   imports: [
     MatLabel,
-    MatFormFieldModule,
+    FormsModule, MatFormFieldModule,
     MatInputModule,
     MatDialogClose,
-    FormsModule,
     MatButtonModule,
 
-    MatDialogTitle,
-    MatDialogContent,
-    MatDialogActions,
+    MatDialogTitle, MatDialogContent, MatDialogActions,
   ],
   templateUrl: './new-list-dialog.component.html',
   styleUrl: './new-list-dialog.component.scss'

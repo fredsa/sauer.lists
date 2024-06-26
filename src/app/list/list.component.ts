@@ -1,16 +1,21 @@
 import { Component, Input } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
-import { MatList, MatListItem } from '@angular/material/list';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatListModule } from '@angular/material/list';
 import { BackendService, ListEntity } from '../backend.service';
 
 @Component({
   selector: 'app-list',
   standalone: true,
   imports: [
-    MatList, MatListItem,
+    MatListModule,
     MatCardModule,
     MatButtonModule,
+    MatIconModule,
+    // FormsModule, MatFormFieldModule,
+    MatInputModule,
   ],
   templateUrl: './list.component.html',
   styleUrl: './list.component.scss'
@@ -24,4 +29,9 @@ export class ListComponent {
   @Input()
   list!: ListEntity;
 
+  public newItem = "";
+
+  addItem() {
+
+  }
 }
