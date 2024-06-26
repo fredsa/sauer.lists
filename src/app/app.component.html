@@ -8,7 +8,7 @@
 
     <app-sign-in />
 
-    <button mat-flat-button (click)="openDialog()">New list</button>
+    <button mat-flat-button (click)="openNewListDialog()">New list</button>
 
     @for(list of backend.lists; track list.id) {
     <app-list [list]="list"></app-list>

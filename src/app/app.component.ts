@@ -25,13 +25,12 @@ import { SignInComponent } from './sign-in/sign-in.component';
 })
 export class AppComponent {
 
-  readonly dialog = inject(MatDialog);
-
   constructor(
+    private dialog: MatDialog,
     public backend: BackendService,
   ) { }
 
-  openDialog(): void {
+  openNewListDialog(): void {
     const dialogRef = this.dialog.open(NewListDialogComponent, {
       data: {},
     });

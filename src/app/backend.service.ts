@@ -1,5 +1,5 @@
 import { Injectable, effect } from '@angular/core';
-import { DocumentData, DocumentReference, Firestore, QueryDocumentSnapshot, SnapshotOptions, collection, collectionSnapshots, deleteDoc, doc, query, setDoc, where } from '@angular/fire/firestore';
+import { DocumentData, DocumentReference, Firestore, QueryDocumentSnapshot, SnapshotOptions, collection, collectionSnapshots, deleteDoc, doc, query, runTransaction, setDoc, where } from '@angular/fire/firestore';
 import { Subscription } from 'rxjs';
 import { LogService } from './log.service';
 import { SigninService } from './signin.service';
@@ -92,4 +92,23 @@ export class BackendService {
         users: [this.signin.user()?.uid],
       });
   };
+
+  async addItem(listId: string, item: string) {
+    const ref = doc(this.listsCollection, listId);
+    try {
+      await runTransaction(this.firestore, async (transaction) => {
+        const doc = await transaction.get(ref);
+        if (!doc.exists()) {
+          throw 'List does not exist: ' + listId;
+        } else {
+          transaction.update(ref, {
+            items: [...doc.data().items!, item],
+          });
+        }
+      });
+    } catch (err: any) {
+      this.log.error('Add item transaction failed', err);
+    }
+  }
+
 }

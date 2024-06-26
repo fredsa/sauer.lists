@@ -72,22 +72,20 @@ export class SigninService implements OnDestroy {
   }
 
   async updateUser(user: UserEntity) {
-    const sfDocRef = doc(this.usersCollection, user.id);
+    const ref = doc(this.usersCollection, user.id);
     try {
       await runTransaction(this.firestore, async (transaction) => {
-        const sfDoc = await transaction.get(sfDocRef);
-        if (!sfDoc.exists()) {
-          transaction.set(sfDocRef, user);
+        const doc = await transaction.get(ref);
+        if (!doc.exists()) {
+          transaction.set(ref, user);
         } else {
-          transaction.update(sfDocRef, {
-            ...sfDoc.data(),
+          transaction.update(ref, {
             ...user,
           });
         }
       });
-      console.log("Transaction successfully committed!");
     } catch (err: any) {
-      this.log.error('Transaction failed', err);
+      this.log.error('Update user transaction failed', err);
     }
   }
 

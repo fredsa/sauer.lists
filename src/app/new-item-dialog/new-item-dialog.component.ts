@@ -1,15 +1,15 @@
-import { Component, Inject, inject, model } from '@angular/core';
+import { Component, inject, model } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle } from '@angular/material/dialog';
 import { MatFormFieldModule, MatLabel } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 
-export interface NewListDialogData {
+export interface NewItemDialogData {
 }
 
 @Component({
-  selector: 'app-new-list-dialog',
+  selector: 'app-new-item-dialog',
   standalone: true,
   imports: [
     MatLabel,
@@ -18,16 +18,15 @@ export interface NewListDialogData {
     MatButtonModule,
     MatDialogTitle, MatDialogContent, MatDialogActions, MatDialogClose,
   ],
-  templateUrl: './new-list-dialog.component.html',
-  styleUrl: './new-list-dialog.component.scss'
+  templateUrl: './new-item-dialog.component.html',
+  styleUrl: './new-item-dialog.component.scss'
 })
-export class NewListDialogComponent {
-
-  readonly data = inject<NewListDialogData>(MAT_DIALOG_DATA);
+export class NewItemDialogComponent {
+  readonly data = inject<NewItemDialogData>(MAT_DIALOG_DATA);
 
   constructor(
-    public dialogRef: MatDialogRef<NewListDialogComponent>,
+    public dialogRef: MatDialogRef<NewItemDialogComponent>,
   ) { }
 
-  readonly listName = model();
+  readonly itemName = model();
 }
