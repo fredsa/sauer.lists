@@ -1,5 +1,6 @@
 import { Injectable, effect } from '@angular/core';
 import { DocumentData, DocumentReference, Firestore, QueryDocumentSnapshot, SnapshotOptions, collection, collectionSnapshots, deleteDoc, doc, query, runTransaction, setDoc, where } from '@angular/fire/firestore';
+import { Transaction } from 'firebase/firestore';
 import { Subscription } from 'rxjs';
 import { LogService } from './log.service';
 import { SigninService } from './signin.service';
@@ -61,7 +62,7 @@ export class BackendService {
   }
 
   listsCollection = collection(this.firestore, 'lists')
-    .withConverter(listConverter);
+    .withConverter<ListEntity, DocumentData>(listConverter);
 
   subscribeToLists(uid: string | undefined) {
     if (!uid) {
@@ -94,14 +95,15 @@ export class BackendService {
   };
 
   async addItem(listId: string, item: string) {
-    const ref = doc(this.listsCollection, listId);
+
+    const ref = doc<ListEntity, DocumentData>(this.listsCollection, listId);
     try {
-      await runTransaction(this.firestore, async (transaction) => {
-        const doc = await transaction.get(ref);
+      await runTransaction<void>(this.firestore, async (transaction: Transaction) => {
+        const doc = await transaction.get<ListEntity, DocumentData>(ref);
         if (!doc.exists()) {
           throw 'List does not exist: ' + listId;
         } else {
-          transaction.update(ref, {
+          transaction.update<ListEntity, DocumentData>(ref, {
             items: [...doc.data().items!, item],
           });
         }

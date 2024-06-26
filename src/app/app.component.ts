@@ -8,6 +8,7 @@ import { DivConsoleComponent } from './div-console/div-console.component';
 import { ListComponent } from './list/list.component';
 import { NewListDialogComponent } from './new-list-dialog/new-list-dialog.component';
 import { SignInComponent } from './sign-in/sign-in.component';
+import { ToolbarComponent } from './toolbar/toolbar.component';
 
 @Component({
   selector: 'app-root',
@@ -18,6 +19,7 @@ import { SignInComponent } from './sign-in/sign-in.component';
     ListComponent,
     SignInComponent,
     DivConsoleComponent,
+    ToolbarComponent,
     AsyncPipe,
   ],
   templateUrl: './app.component.html',

@@ -1,0 +1,3 @@
+<img [src]="signin.user()?.photoURL || '/baseline-person_outline-24px.svg'"
+    [title]="signin.user() ? signin.user()!.displayName + '\n' + signin.user()!.uid : 'Signed out'"
+    (click)="signinout()" [class]="{working: working()}">

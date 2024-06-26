@@ -1,6 +1,7 @@
 import { Injectable, OnDestroy, signal } from '@angular/core';
 import { Auth, GoogleAuthProvider, User, authState, signInAnonymously, signInWithPopup, signOut } from '@angular/fire/auth';
 import { DocumentData, Firestore, QueryDocumentSnapshot, SnapshotOptions, collection, doc, runTransaction } from '@angular/fire/firestore';
+import { Transaction } from 'firebase/firestore';
 import { EMPTY, Observable, Subscription } from 'rxjs';
 import { LogService } from './log.service';
 
@@ -39,7 +40,8 @@ const userConverter = {
 })
 export class SigninService implements OnDestroy {
 
-  usersCollection = collection(this.firestore, 'users');
+  usersCollection = collection(this.firestore, 'users')
+    .withConverter<UserEntity, DocumentData>(userConverter);
 
   private readonly userSubscription: Subscription | undefined;
   private readonly firebaseUser: Observable<User | null> = EMPTY;
@@ -72,14 +74,14 @@ export class SigninService implements OnDestroy {
   }
 
   async updateUser(user: UserEntity) {
-    const ref = doc(this.usersCollection, user.id);
+    const ref = doc<UserEntity, DocumentData>(this.usersCollection, user.id);
     try {
-      await runTransaction(this.firestore, async (transaction) => {
-        const doc = await transaction.get(ref);
+      await runTransaction<void>(this.firestore, async (transaction: Transaction) => {
+        const doc = await transaction.get<UserEntity, DocumentData>(ref);
         if (!doc.exists()) {
-          transaction.set(ref, user);
+          transaction.set<UserEntity, DocumentData>(ref, user);
         } else {
-          transaction.update(ref, {
+          transaction.update<UserEntity, DocumentData>(ref, {
             ...user,
           });
         }

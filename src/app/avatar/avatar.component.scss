@@ -1,0 +1,21 @@
+img {
+    width: 32px;
+    height: 32px;
+    display: block;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+@keyframes work {
+    0% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: .1;
+    }
+}
+
+.working {
+    animation: work .5s infinite alternate ease-in-out;
+}
