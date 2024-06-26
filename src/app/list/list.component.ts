@@ -1,9 +1,9 @@
 import { Component, Input } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
+import { MatCardModule, MatCardTitle } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { MatListModule } from '@angular/material/list';
+import { MatList, MatListItem, MatListModule } from '@angular/material/list';
 import { BackendService, ListEntity } from '../backend.service';
 import { MatDialog } from '@angular/material/dialog';
 import { NewItemDialogComponent } from '../new-item-dialog/new-item-dialog.component';
