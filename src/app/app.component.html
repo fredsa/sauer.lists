@@ -1,17 +1,15 @@
+<app-div-console />
+
+<h1>Sauer Lists</h1>
+
+<router-outlet />
+
+<app-sign-in />
+
+<button mat-flat-button (click)="openNewListDialog()">New list</button>
+
 <div class="container">
-
-    <app-div-console />
-
-    <h1>Sauer Lists</h1>
-
-    <router-outlet />
-
-    <app-sign-in />
-
-    <button mat-flat-button (click)="openNewListDialog()">New list</button>
-
     @for(list of backend.lists; track list.id) {
     <app-list [list]="list"></app-list>
     }
-
 </div>
