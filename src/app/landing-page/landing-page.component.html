@@ -1,0 +1,24 @@
+@if (lists$ | async; as lists) {
+@for(list of lists; track list.id) {
+<div (click)="router.navigate(['list', list.id])">
+    <mat-card class="clickable" appearance="outlined">
+        <mat-card-header>
+            <div mat-card-avatar>
+                <mat-icon>list</mat-icon>
+            </div>
+            <mat-card-title>
+                {{list.name}}
+            </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <div>
+                Contains {{list.items?.length}} items.
+            </div>
+            <div>
+                Shared with: {{list.users}}
+            </div>
+        </mat-card-content>
+    </mat-card>
+</div>
+}
+}

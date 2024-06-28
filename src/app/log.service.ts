@@ -68,7 +68,6 @@ export class LogService {
   }
 
   handle(err: Error) {
-    console.error("Uncaught exception", err);
     this.logMessages.push({ level: Level.error, datetime: new Date(), message: "Uncaught exception", error: err });
   }
 

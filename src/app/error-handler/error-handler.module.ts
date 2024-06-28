@@ -13,8 +13,7 @@ export class ErrorHandlerModule implements ErrorHandler {
     private logService: LogService,
   ) { }
 
-  handleError(error: any): void {
-    console.error("Uncaught exception", error);
-    this.logService.handle(error);
+  handleError(err: any): void {
+    this.logService.handle(err);
   }
 }

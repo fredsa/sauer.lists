@@ -1,5 +1,27 @@
-<button mat-icon-button class="example-icon" aria-label="menu">
+<button mat-icon-button [matMenuTriggerFor]="menu" class="example-icon" aria-label="menu">
     <mat-icon>menu</mat-icon>
 </button>
-<div class="title">Sauer Lists</div>
+<a class="title" [routerLink]="['']">Sauer Lists</a>
 <app-avatar />
+
+<mat-menu #menu>
+    @if (signin.user()?.uid) {
+    @if (lists$ | async; as lists) {
+    @for (list of lists; track list.id) {
+    <a mat-menu-item [routerLink]="['/list', list.id]">
+        <mat-icon>list</mat-icon>
+        <span>{{list.name}}</span>
+    </a>
+    }
+    }
+    <button mat-menu-item (click)="dialog.openNewListDialog()">
+        <mat-icon>add</mat-icon>
+        <span>New list</span>
+    </button>
+} @else {
+    <button mat-menu-item (click)="signin.signin()">
+        <mat-icon>login</mat-icon>
+        <span>Sign in</span>
+    </button>
+}
+</mat-menu>

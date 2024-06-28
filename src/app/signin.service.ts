@@ -1,9 +1,12 @@
 import { Injectable, OnDestroy, signal } from '@angular/core';
 import { Auth, GoogleAuthProvider, User, authState, signInAnonymously, signInWithPopup, signOut } from '@angular/fire/auth';
 import { DocumentData, Firestore, QueryDocumentSnapshot, SnapshotOptions, collection, doc, runTransaction } from '@angular/fire/firestore';
+import { Router } from '@angular/router';
 import { Transaction } from 'firebase/firestore';
 import { EMPTY, Observable, Subscription } from 'rxjs';
 import { LogService } from './log.service';
+
+export const SigninContinueParam = 'continue';
 
 export interface UserEntity {
   id: string,
@@ -44,14 +47,15 @@ export class SigninService implements OnDestroy {
     .withConverter<UserEntity, DocumentData>(userConverter);
 
   private readonly userSubscription: Subscription | undefined;
-  private readonly firebaseUser: Observable<User | null> = EMPTY;
 
+  public readonly firebaseUser: Observable<User | null> = EMPTY;
   public user = signal<User | null>(null);
 
   constructor(
     private log: LogService,
     private auth: Auth,
     private firestore: Firestore,
+    private router: Router,
   ) {
     this.firebaseUser = authState(this.auth);
     this.userSubscription = this.firebaseUser.subscribe((user: User | null) => {
@@ -98,16 +102,20 @@ export class SigninService implements OnDestroy {
     }
   }
 
-  async login() {
+  async signin() {
     return await signInWithPopup(this.auth, new GoogleAuthProvider());
   }
 
-  async loginAnonymously() {
+  async signinAnonymously() {
     return await signInAnonymously(this.auth);
   }
 
-  async logout() {
-    return await signOut(this.auth);
+  async signout() {
+    return await signOut(this.auth)
+      .then(() => {
+        console.log('signed out at', this.router.routerState.snapshot.url)
+        this.router.navigate(['signout'], { queryParams: { [SigninContinueParam]: this.router.routerState.snapshot.url } });
+      });
   }
 
 }

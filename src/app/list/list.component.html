@@ -1,3 +1,5 @@
+<!-- @if ((list$|async)?.data(); as list) { -->
+@if (list) {
 <mat-card appearance="outlined">
     <mat-card-header>
         <mat-card-title>
@@ -15,7 +17,7 @@
         <button mat-raised-button extended (click)="openNewItemDialog(list.id)"><mat-icon>add</mat-icon>Add item</button>
         <mat-list>
             <ol>
-                @for (item of list.items; track item) {
+                @for (item of list.items; track $index) {
                 <li>
                     <mat-list-item>{{item}}</mat-list-item>
                 </li>
@@ -24,6 +26,7 @@
         </mat-list>
     </mat-card-content>
     <mat-card-actions>
-        <button mat-raised-button (click)="backend.deleteList(list.id)">Delete</button>
+        <button mat-raised-button (click)="deleteList(list.id)">Delete</button>
     </mat-card-actions>
 </mat-card>
+}

@@ -1,6 +1,6 @@
 @if (signin.user()?.uid) {
-<button mat-raised-button (click)="signin.logout()">Log out</button>
+<button mat-raised-button (click)="signin.signout()">Log out</button>
 } @else {
-<button mat-raised-button (click)="signin.login()">Log in with Google</button>
-<button mat-raised-button (click)="signin.loginAnonymously()">Log in anonymously</button>
+<button mat-raised-button (click)="signin.signin()">Log in with Google</button>
+<button mat-raised-button (click)="signin.signinAnonymously()">Log in anonymously</button>
 }

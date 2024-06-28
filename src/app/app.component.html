@@ -1,15 +1,7 @@
-<app-div-console />
-
 <app-toolbar />
 
+<app-div-console />
+
+<!-- <app-sign-in /> -->
+
 <router-outlet />
-
-<app-sign-in />
-
-<button mat-flat-button (click)="openNewListDialog()">New list</button>
-
-<div class="container">
-    @for(list of backend.lists; track list.id) {
-    <app-list [list]="list"></app-list>
-    }
-</div>

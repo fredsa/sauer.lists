@@ -1,5 +1,4 @@
 import { Component, signal } from '@angular/core';
-import { MatMenuModule } from '@angular/material/menu';
 import { SigninService } from '../signin.service';
 
 @Component({
@@ -21,11 +20,11 @@ export class AvatarComponent {
     this.working.set(true);
     setTimeout(() => {
       if (this.signin.user()?.uid) {
-        this.signin.logout().finally(() => {
+        this.signin.signout().finally(() => {
           this.working.set(false);
         });
       } else {
-        this.signin.login().finally(() => {
+        this.signin.signin().finally(() => {
           this.working.set(false);
         });
       }
